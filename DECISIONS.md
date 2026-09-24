@@ -67,8 +67,9 @@ Each entry: the decision and the reason. Newest at the bottom.
   value only 65% of the time, because count noise is much larger near the peak and the
   plain residual bootstrap ignores that. The square root makes Poisson noise roughly
   equal in size (variance-stabilising transform); the same check gave 90%. The final
-  pipeline re-runs a smaller version (20 datasets x 50 refits) and saves the coverage
-  to `results/m2_summary.json`.
+  pipeline re-runs both versions (20 datasets x 50 refits each, different seeds from the
+  scratch check) and saves them to `results/m2_summary.json`: 95% coverage for sqrt vs 80%
+  for raw counts. Only the saved numbers are quoted in the README and other docs.
 - **Residual bootstrap (500 refits)**, not case resampling: resampling days would break
   the time structure of an epidemic curve.
 - **The shaded band is a confidence band for the fitted curve**, not a prediction
@@ -168,3 +169,16 @@ Each entry: the decision and the reason. Newest at the bottom.
 - **Dashboard smoke tests use Streamlit's `AppTest`** (renders all tabs headless, changes a
   slider). A real `streamlit run` launch was also checked (health endpoint + screenshots).
 - **`.streamlit/config.toml`** turns off usage statistics and sets a light theme.
+
+## Phase 9 - Quality
+- **Fresh-environment check**: a brand-new venv installed from `requirements.txt` alone
+  passed the full test suite with no skips. A separate fresh venv ran `run_all.py` end to
+  end, and every file in `results/` and `figures/*.png` came out identical to the committed
+  versions (only line endings differed). Seeds make the whole pipeline deterministic.
+- **Windows path-length gotcha**: installing Streamlit into a very deeply nested folder
+  fails with WinError 206 (path > 260 characters). Keep the project path short, or enable
+  long paths in Windows.
+- **`tests/test_docs.py`** fails if the README results tables drift from `results/`, if
+  any doc contains TODO/TBD/FIXME, or if a figure has no caption.
+- **CI workflow** (`.github/workflows/tests.yml`) and **Dockerfile** were added but could
+  not be run here: there is no git remote, and Docker is not installed on this machine.

@@ -90,23 +90,36 @@ def _sqrt(x: np.ndarray) -> np.ndarray:
     return np.sqrt(np.clip(x, 0.0, None))
 
 
+def _raw(x: np.ndarray) -> np.ndarray:
+    """Identity transform (negatives clipped to zero)."""
+    return np.clip(x, 0.0, None)
+
+
+# scale name -> (forward transform, inverse transform)
+SCALES = {"sqrt": (_sqrt, lambda y: np.clip(y, 0.0, None) ** 2), "raw": (_raw, _raw)}
+
+
 def fit_sir(
     t: np.ndarray,
     observed: np.ndarray,
     N: float,
     guess: tuple[float, float, float] = (1.0, 0.3, 1.0),
+    scale: str = "sqrt",
 ) -> FitResult:
-    """Least-squares fit of SIR (beta, gamma, I0) to observed prevalence (sqrt scale).
+    """Least-squares fit of SIR (beta, gamma, I0) to observed prevalence.
 
-    ``residuals`` in the result are on the square-root scale.
+    ``scale="sqrt"`` (default) compares square roots of model and data; ``"raw"``
+    compares counts directly (kept only to show why sqrt is needed). ``residuals`` in
+    the result are on the chosen scale.
     """
+    fwd, _inv = SCALES[scale]
     t = np.asarray(t, dtype=float)
     observed = np.asarray(observed, dtype=float)
-    sqrt_obs = _sqrt(observed)
+    obs_s = fwd(observed)
 
     def residuals(log_theta: np.ndarray) -> np.ndarray:
         beta, gamma, I0 = np.exp(log_theta)
-        return _sqrt(sir_prevalence(t, beta, gamma, I0, N)) - sqrt_obs
+        return fwd(sir_prevalence(t, beta, gamma, I0, N)) - obs_s
 
     lower = np.log([1e-3, 1e-3, 1e-2])
     upper = np.log([20.0, 10.0, 0.5 * N])
@@ -114,23 +127,24 @@ def fit_sir(
     beta, gamma, I0 = np.exp(res.x)
     fitted = sir_prevalence(t, beta, gamma, I0, N)
     return FitResult(beta=beta, gamma=gamma, I0=I0, N=N, t=t, fitted=fitted,
-                     residuals=sqrt_obs - _sqrt(fitted),
+                     residuals=obs_s - fwd(fitted),
                      rmse=float(np.sqrt(np.mean((observed - fitted) ** 2))))
 
 
 def bootstrap_fit(
-    t: np.ndarray, observed: np.ndarray, N: float, n_boot: int = 500, seed: int = 0
+    t: np.ndarray, observed: np.ndarray, N: float, n_boot: int = 500, seed: int = 0,
+    scale: str = "sqrt",
 ) -> FitResult:
-    """Point fit plus a residual bootstrap (sqrt scale) with ``n_boot`` refits."""
-    best = fit_sir(t, observed, N)
+    """Point fit plus a residual bootstrap (on the fitting scale) with ``n_boot`` refits."""
+    fwd, inv = SCALES[scale]
+    best = fit_sir(t, observed, N, scale=scale)
     rng = np.random.default_rng(seed)
     guess = (best.beta, best.gamma, best.I0)
-    base = _sqrt(best.fitted)
+    base = fwd(best.fitted)
     samples = []
     for _ in range(n_boot):
-        pseudo_sqrt = base + rng.choice(best.residuals, size=len(t), replace=True)
-        pseudo = np.clip(pseudo_sqrt, 0.0, None) ** 2
-        refit = fit_sir(t, pseudo, N, guess=guess)
+        pseudo = inv(base + rng.choice(best.residuals, size=len(t), replace=True))
+        refit = fit_sir(t, pseudo, N, guess=guess, scale=scale)
         samples.append((refit.beta, refit.gamma, refit.I0))
     best.boot = np.array(samples)
     return best

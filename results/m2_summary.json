@@ -61,12 +61,22 @@
     "all_true_values_inside_ci": false
   },
   "ci_coverage": {
+    "scale": "sqrt",
     "n_datasets": 20,
     "n_boot_each": 50,
     "true_R0": 3.555555555555556,
     "R0_ci95_coverage": 0.95,
     "mean_R0_estimate": 3.5470204826348706,
     "sd_R0_estimate": 0.10024022765119098
+  },
+  "ci_coverage_raw_counts": {
+    "scale": "raw",
+    "n_datasets": 20,
+    "n_boot_each": 50,
+    "true_R0": 3.555555555555556,
+    "R0_ci95_coverage": 0.8,
+    "mean_R0_estimate": 3.538663357705983,
+    "sd_R0_estimate": 0.08263407370675131
   },
   "covid_assumptions": {
     "latent_days": 5.2,

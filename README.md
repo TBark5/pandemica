@@ -110,7 +110,7 @@ A selection (all 300 dpi; captions for every figure are in [figures/CAPTIONS.md]
 | I0 | 2.000 | 2.656 | 2.163 - 3.220 | +32.8% | no |
 | R0 | 3.556 | 3.466 | 3.344 - 3.571 | -2.5% | yes |
 
-**CI calibration:** over 20 synthetic datasets, the 95% CI for R0 contained the true value 95% of the time; mean estimate 3.547 vs true 3.556.
+**CI calibration:** over 20 synthetic datasets, the 95% CI for R0 contained the true value 95% of the time; mean estimate 3.547 vs true 3.556. The same check with least squares on raw counts gave 80% coverage, which is why the square-root scale is used (a small study: 20 datasets, 50 refits each).
 
 **COVID-19 early growth (JHU CSSE)**: method demonstration only; assumes a 5.2-day latent and 5.0-day infectious period.
 

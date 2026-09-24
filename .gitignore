@@ -5,3 +5,4 @@ __pycache__/
 .idea/
 .streamlit/secrets.toml
 *.log
+.venv-*/

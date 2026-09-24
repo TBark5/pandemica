@@ -29,7 +29,8 @@ def save_json(name: str, payload: dict) -> Path:
     """Write ``payload`` to ``results/<name>.json`` (pretty-printed)."""
     ensure_dirs()
     path = RESULTS_DIR / f"{name}.json"
-    path.write_text(json.dumps(_to_builtin(payload), indent=2), encoding="utf-8")
+    text = json.dumps(_to_builtin(payload), indent=2)
+    path.write_text(text, encoding="utf-8", newline="\n")
     return path
 
 
@@ -37,7 +38,7 @@ def save_csv(name: str, df: pd.DataFrame) -> Path:
     """Write ``df`` to ``results/<name>.csv``."""
     ensure_dirs()
     path = RESULTS_DIR / f"{name}.csv"
-    df.to_csv(path, index=False)
+    df.to_csv(path, index=False, lineterminator="\n")
     return path
 
 

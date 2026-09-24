@@ -70,18 +70,18 @@ def recovery_table(data, fit) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def ci_coverage() -> dict:
+def ci_coverage(scale: str = "sqrt") -> dict:
     """Refit many synthetic datasets (different noise seeds) and count how often the
     95% bootstrap CI for R0 contains the true value. Also checks for bias."""
     covered, estimates = [], []
     for seed in range(COVERAGE_DATASETS):
         d = make_synthetic_outbreak(seed=1000 + seed)
-        fit = bootstrap_fit(d.t, d.observed, d.N, n_boot=COVERAGE_BOOT, seed=seed)
+        fit = bootstrap_fit(d.t, d.observed, d.N, n_boot=COVERAGE_BOOT, seed=seed, scale=scale)
         lo, hi = fit.ci("R0")
         covered.append(lo <= d.truth["R0"] <= hi)
         estimates.append(fit.r0)
     est = np.array(estimates)
-    return {"n_datasets": COVERAGE_DATASETS, "n_boot_each": COVERAGE_BOOT,
+    return {"scale": scale, "n_datasets": COVERAGE_DATASETS, "n_boot_each": COVERAGE_BOOT,
             "true_R0": make_synthetic_outbreak().truth["R0"],
             "R0_ci95_coverage": float(np.mean(covered)),
             "mean_R0_estimate": float(est.mean()), "sd_R0_estimate": float(est.std(ddof=1))}
@@ -138,7 +138,9 @@ def main() -> dict:
         "synthetic_recovery": {"truth": synthetic.truth, "fit": syn_fit.summary(),
                                "all_true_values_inside_ci": bool(table["true_inside_ci"].all())},
     }
-    results["ci_coverage"] = ci_coverage()
+    results["ci_coverage"] = ci_coverage("sqrt")
+    # Same check with least squares on raw counts: shows why the sqrt scale is used.
+    results["ci_coverage_raw_counts"] = ci_coverage("raw")
     growth = covid_growth()
     if growth is not None:
         save_csv("m2_covid_growth_r0", growth)
