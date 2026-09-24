@@ -1,0 +1,82 @@
+{
+  "baseline": {
+    "R0": 2.5,
+    "N": 1000000,
+    "ifr": 0.01,
+    "latent_days": 5.0,
+    "infectious_days": 7.0
+  },
+  "counterfactuals": {
+    "No intervention": {
+      "peak_infectious": 134503.70805828852,
+      "peak_day": 120.0,
+      "cumulative_deaths": 8941.076039269194,
+      "cumulative_infections": 894107.603926919,
+      "attack_rate": 0.894107603926919,
+      "vaccinated": 0.0,
+      "deaths_averted_pct": 0.0,
+      "peak_reduction_pct": 0.0
+    },
+    "Lockdown day 60, 60% for 60 d": {
+      "peak_infectious": 127728.41554494278,
+      "peak_day": 181.0,
+      "cumulative_deaths": 8896.628620610823,
+      "cumulative_infections": 889662.8620610806,
+      "attack_rate": 0.8896628620610806,
+      "vaccinated": 0.0,
+      "deaths_averted_pct": 0.49711487144452615,
+      "peak_reduction_pct": 5.037253330153257
+    },
+    "Vaccination from day 60, 0.5%/day": {
+      "peak_infectious": 76441.77061934791,
+      "peak_day": 121.0,
+      "cumulative_deaths": 5966.921474493738,
+      "cumulative_infections": 596692.1474493721,
+      "attack_rate": 0.5966921474493722,
+      "vaccinated": 395449.73871372506,
+      "deaths_averted_pct": 33.26394442584956,
+      "peak_reduction_pct": 43.16753662566604
+    },
+    "Test & isolate from day 30, 0.1/day": {
+      "peak_infectious": 26215.346455760715,
+      "peak_day": 182.0,
+      "cumulative_deaths": 5661.996041708026,
+      "cumulative_infections": 566199.604179124,
+      "attack_rate": 0.566199604179124,
+      "vaccinated": 0.0,
+      "deaths_averted_pct": 36.674332967972234,
+      "peak_reduction_pct": 80.50957342796823
+    },
+    "All three combined": {
+      "peak_infectious": 387.7571949159565,
+      "peak_day": 62.0,
+      "cumulative_deaths": 37.86098240833803,
+      "cumulative_infections": 3786.098240833808,
+      "attack_rate": 0.003786098240833808,
+      "vaccinated": 961269.1659659857,
+      "deaths_averted_pct": 99.5765500456315,
+      "peak_reduction_pct": 99.71171263564874
+    }
+  },
+  "lockdown_best_start_day_for_deaths": 110.0,
+  "lockdown_best_strength_for_deaths": 0.675,
+  "lockdown_best_deaths": 6605.468442490783,
+  "strongest_lockdown_deaths_by_start_day": {
+    "0": 8941.032960567503,
+    "10": 8940.937630910108,
+    "20": 8940.709326145483,
+    "30": 8940.105229812187,
+    "40": 8938.506078757853,
+    "50": 8934.273306435758,
+    "60": 8923.073121660067,
+    "70": 8893.463783401381,
+    "80": 8815.420008178009,
+    "90": 8612.00220573863,
+    "100": 8104.391181534308,
+    "110": 7004.989283584954,
+    "120": 6762.713341256899,
+    "130": 7906.634719111753,
+    "140": 8473.085078266424,
+    "150": 8730.738047956844
+  }
+}

@@ -109,3 +109,15 @@ Each entry: the decision and the reason. Newest at the bottom.
   This is exact when there is only one and a fair split otherwise.
 - **Snapshot figure uses 300-node versions** of each network, because 2000 nodes cannot
   be drawn readably.
+
+## Phase 5 - Interventions (M5) and sensitivity (M6)
+- **Baseline for M5: SEIRD, R0 = 2.5, 5-day latent, 7-day infectious, IFR 1%, N = 1M.**
+  Generic "COVID-like" illustrative values, not calibrated to any real epidemic.
+- **Lockdown is temporary (60 days)**; vaccination and isolation stay on once started.
+  This is what makes the lockdown heatmap interesting: a lockdown that ends before
+  enough people are immune only delays the epidemic.
+- **Simulation horizon 730 days** so waves pushed later by a lockdown are still counted
+  in cumulative deaths.
+- **Heatmap grid: 16 start days (0-150, step 10) x 13 strengths** per intervention,
+  208 ODE runs each, about 30 s per heatmap on CPU.
+- **Heatmaps use a log colour scale** because outcomes span several orders of magnitude.
