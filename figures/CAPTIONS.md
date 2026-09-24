@@ -25,6 +25,11 @@ Colours: Okabe-Ito palette (colorblind-safe) for categories; viridis/magma for c
 | `m2_mcmc_posterior.png` | Bayesian SIR fit by MCMC (emcee) with a negative-binomial likelihood: 95% credible band for the mean curve and posterior predictive band for new data (left), R0 posterior compared with the least-squares bootstrap (middle), and the joint posterior of beta and gamma (right). |
 | `m2_covid_growth.png` | Log-linear fits to the first 14 days of COVID-19 growth in six countries, converted to R0 with assumed latent and infectious periods (a method demonstration, not an estimate of COVID-19's R0). |
 
+## Stretch goal - Age structure
+| Figure | Caption |
+|---|---|
+| `age_vaccination_priority.png` | Age-structured SEIR with an illustrative contact matrix (left): total infections (middle) and deaths (right) for four ways of allocating a limited number of vaccine doses. |
+
 ## M3 - Stochastic model
 | Figure | Caption |
 |---|---|

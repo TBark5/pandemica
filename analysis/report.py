@@ -248,9 +248,22 @@ def _inject(content: str, start: str, end: str, text: str) -> str:
     return f"{before}{start}\n{text}\n{end}{after}"
 
 
+def section_age() -> str:
+    try:
+        a = load_json("age_vaccination_summary")
+    except FileNotFoundError:
+        return ""
+    rows = pd.DataFrame([{"Priority (100,000 doses)": s,
+                          "Infections": f"{v['infections']:,.0f}", "Deaths": f"{v['deaths']:,.0f}"}
+                         for s, v in a["with_100k_doses"].items()])
+    return (f"### Stretch - Age-structured SEIR (3 age groups, illustrative contact matrix, "
+            f"R0 = {a['R0']})\n{_table(rows)}\n\nFewest infections: {a['best_for_infections_100k']}; "
+            f"fewest deaths: {a['best_for_deaths_100k']}.\n")
+
+
 def build() -> str:
-    parts = [section_m1(), section_m2(), section_m2_bayes(), section_m3(), section_m4(), section_m5(),
-             section_m6(), section_m7()]
+    parts = [section_m1(), section_m2(), section_m2_bayes(), section_m3(), section_m4(),
+             section_m5(), section_m6(), section_m7(), section_age()]
     return "\n".join(parts)
 
 

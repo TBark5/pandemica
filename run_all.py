@@ -24,6 +24,7 @@ STEPS = {
     "m5": ("analysis.m5_interventions", "M5 interventions"),
     "m6": ("analysis.m6_sensitivity", "M6 sensitivity analysis"),
     "m7": ("analysis.m7_spatial", "M7 metapopulation + animation"),
+    "age": ("analysis.age_vaccination", "Age-structured vaccination priority (stretch goal)"),
     "report": ("analysis.report", "Results tables -> results/SUMMARY.md and README.md"),
 }
 

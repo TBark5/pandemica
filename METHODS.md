@@ -216,3 +216,33 @@ $$
 with local infection $\beta S_i I_i / N_i$. Because $F$ is symmetric, arrivals equal departures
 and each $P_i$ stays constant. A travel restriction multiplies $F$ by $(1 - \text{cut})$.
 Arrival day in a region is the first day its prevalence $I_i/P_i$ exceeds $10^{-4}$.
+
+---
+
+## Extension - Bayesian estimation with MCMC (`src/bayes.py`)
+
+Observation model: $y_k \sim \text{NegBin}(\mu_k, k)$ with $\mu_k = I(t_k;\beta,\gamma,I_0)$ and
+$\text{Var}(y_k) = \mu_k + \mu_k^2/k$ (Poisson as $k \to \infty$). Log-likelihood:
+$$
+\ell = \sum_k \left[\ln\Gamma(y_k+k) - \ln\Gamma(k) - \ln y_k! + k\ln\frac{k}{k+\mu_k}
++ y_k \ln\frac{\mu_k}{k+\mu_k}\right].
+$$
+Priors are flat on $\log\beta, \log\gamma, \log I_0, \log k$ within bounds. The posterior
+$p(\theta \mid y) \propto p(y \mid \theta)\,p(\theta)$ is sampled with emcee's
+affine-invariant ensemble sampler. Credible intervals are posterior percentiles. The
+posterior predictive band adds negative-binomial noise to curves drawn from the posterior.
+
+## Extension - Age-structured SEIR (`src/age_structured.py`)
+
+Groups $i = 1..3$ with sizes $N_i$ and contact matrix $C_{ij}$ (daily contacts of a person
+in $i$ with people in $j$; reciprocity requires $N_i C_{ij} = N_j C_{ji}$). Force of infection
+$\lambda_i = q \sum_j C_{ij} I_j / N_j$, so $dS_i/dt = -\lambda_i S_i$, and so on.
+
+Next-generation matrix (expected infections in $i$ caused by one infectious person in $j$,
+at the start of the epidemic):
+$$
+K_{ij} = \frac{q\, C_{ij} N_i}{N_j\,\gamma}, \qquad R_0 = \rho(K)\ \ (\text{largest eigenvalue}).
+$$
+$q$ is set so that $\rho(K)$ equals the target R0. With proportionate mixing
+($C_{ij} \propto N_j$) the model collapses to one homogeneous SEIR, which is a test.
+Deaths in group $i$ = infections in $i$ x $\text{IFR}_i$.

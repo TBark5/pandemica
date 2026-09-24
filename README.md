@@ -36,6 +36,11 @@ Every number below is generated from the saved runs in [`results/`](results/) by
 | **M6** Sensitivity | Which parameters matter most? | Latin hypercube sampling + partial rank correlation (PRCC), tornado plot | [`src/sensitivity.py`](src/sensitivity.py) |
 | **M7** Spatial | How does an epidemic travel between regions? | 8-region metapopulation SEIR with a gravity-model travel matrix, animated map | [`src/metapopulation.py`](src/metapopulation.py) |
 
+Extensions: a **Bayesian fit with MCMC** ([`src/bayes.py`](src/bayes.py), emcee,
+negative-binomial likelihood) and an **age-structured SEIR model** with a contact matrix and
+next-generation-matrix R0 ([`src/age_structured.py`](src/age_structured.py)) that compares
+vaccine-priority strategies.
+
 The equations for every model are written out in [METHODS.md](METHODS.md).
 
 ## Dashboard
@@ -199,6 +204,16 @@ Best single 60-day lockdown in the sweep (fewest deaths): start day 110, contact
 | Farmstead | 150,000 | 52 | 66 | 89.1% |
 
 Cutting travel by 90% delayed arrival outside the Capital by 13.6 days on average, but the overall attack rate stayed at 89.2% (vs 89.0%).
+
+### Stretch - Age-structured SEIR (3 age groups, illustrative contact matrix, R0 = 2.5)
+| Priority (100,000 doses) | Infections | Deaths |
+|---|---|---|
+| children first | 723,112 | 7,739 |
+| adults 20-64 first | 729,485 | 7,340 |
+| 65+ first | 762,762 | 4,156 |
+| everyone equally | 732,242 | 6,832 |
+
+Fewest infections: children first; fewest deaths: 65+ first.
 
 <!-- RESULTS:END -->
 

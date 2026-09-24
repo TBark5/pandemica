@@ -118,3 +118,13 @@ Best single 60-day lockdown in the sweep (fewest deaths): start day 110, contact
 | Farmstead | 150,000 | 52 | 66 | 89.1% |
 
 Cutting travel by 90% delayed arrival outside the Capital by 13.6 days on average, but the overall attack rate stayed at 89.2% (vs 89.0%).
+
+### Stretch - Age-structured SEIR (3 age groups, illustrative contact matrix, R0 = 2.5)
+| Priority (100,000 doses) | Infections | Deaths |
+|---|---|---|
+| children first | 723,112 | 7,739 |
+| adults 20-64 first | 729,485 | 7,340 |
+| 65+ first | 762,762 | 4,156 |
+| everyone equally | 732,242 | 6,832 |
+
+Fewest infections: children first; fewest deaths: 65+ first.

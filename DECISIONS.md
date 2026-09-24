@@ -195,3 +195,13 @@ Each entry: the decision and the reason. Newest at the bottom.
 - **Result differs from least squares** (lower median R0, wider interval). The two methods
   make different assumptions about the noise; both are reported rather than picking one.
 - `sampler.random_state` is seeded, so MCMC results are reproducible.
+
+## Stretch - Age structure
+- **3 age groups with an illustrative, reciprocal contact matrix** (children mostly meet
+  children, adults have the most contacts) and steeply age-dependent IFRs. Real survey
+  matrices (POLYMOD) would need an extra data download and processing; the illustrative
+  matrix is labelled as such in the figure, code and README.
+- **R0 from the next-generation matrix**, per-contact transmission probability scaled to
+  hit R0 = 2.5.
+- **Vaccination priority experiment**: 0-300k doses (1M people) allocated children-first,
+  adults-first, 65+-first or pro rata, with spill-over to the next group when one is full.
