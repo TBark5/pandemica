@@ -70,7 +70,7 @@ python -m venv .venv
 pip install -r requirements.txt
 
 pytest                  # full test suite, including the analytical validation tests (~1 min)
-python run_all.py       # regenerate every result and figure (~10 min on a laptop CPU)
+python run_all.py       # regenerate every result and figure (~12 min on a laptop CPU)
 streamlit run app.py    # open the dashboard
 ```
 
