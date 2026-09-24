@@ -94,3 +94,18 @@ Each entry: the decision and the reason. Newest at the bottom.
   of Kurtz's law of large numbers, under which the stochastic model converges to the ODE.
 - **Replicate counts** (runtime cap): 500 for the main ensemble, 400 per cell of the
   extinction table, 40 per N in the convergence study (N up to 30,000).
+- **Network model is discrete-time (1-day steps)** with per-edge infection probability
+  1 - exp(-tau) and recovery probability 1 - exp(-gamma). Vectorised with a sparse
+  adjacency matrix. A continuous-time network Gillespie would be exact but much slower.
+- **All three networks have 2000 nodes and mean degree ~8**, so differences come from
+  structure alone. Watts-Strogatz rewiring probability 0.1 (clustered small world),
+  Barabasi-Albert m = 4.
+- **tau = 0.06, gamma = 0.2** gives an approximate network R0 of ~1.8 on Erdos-Renyi, a
+  mid-sized epidemic where network effects are visible.
+- **Betweenness uses networkx's sampled estimator (k = 500 sources)** for speed.
+- **Vaccination = removing the node** (it starts in R). "Attack rate" is the share of
+  *all* nodes ever infected, so vaccinated nodes count as not infected.
+- **Superspreaders**: each new infection is credited to a random infectious neighbour.
+  This is exact when there is only one and a fair split otherwise.
+- **Snapshot figure uses 300-node versions** of each network, because 2000 nodes cannot
+  be drawn readably.

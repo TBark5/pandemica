@@ -1,0 +1,20 @@
+{
+  "setup": {
+    "nodes": 2000,
+    "mean_degree": 8,
+    "tau": 0.06,
+    "gamma": 0.2,
+    "initial_infected": 5,
+    "runs": 50
+  },
+  "superspreaders_barabasi_albert": {
+    "top1pct_degree_share_of_infections": 0.17560534677330997,
+    "spearman_degree_vs_secondary": 0.9223502819216176,
+    "spearman_betweenness_vs_secondary": 0.7814803422483817
+  },
+  "attack_rate_mean": {
+    "Erdos-Renyi": 0.80203,
+    "Watts-Strogatz": 0.5992999999999999,
+    "Barabasi-Albert": 0.7326600000000001
+  }
+}
