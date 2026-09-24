@@ -89,6 +89,29 @@ def section_m2() -> str:
     return out
 
 
+def section_m2_bayes() -> str:
+    try:
+        b = load_json("m2_bayes_summary")
+    except FileNotFoundError:
+        return ""
+    p, s = b["posterior"], b["posterior"]["sampler"]
+    rec = b["synthetic_recovery"]
+    rows = "".join(
+        f"| {name} | {p[name]['median']:.3f} | {p[name]['ci95_low']:.3f} - "
+        f"{p[name]['ci95_high']:.3f} |\n" for name in ("R0", "beta", "gamma", "k"))
+    lo, hi = b["bootstrap_R0_ci95_for_comparison"]
+    return (
+        "### M2 (stretch) - Bayesian fit with MCMC (emcee, negative-binomial likelihood)\n"
+        "| Parameter | Posterior median | 95% credible interval |\n|---|---|---|\n" + rows +
+        f"\n{s['walkers']} walkers x {s['steps']} steps ({s['burn_in']} burn-in), acceptance "
+        f"{s['acceptance_fraction']:.2f}, max autocorrelation time "
+        f"{s['max_autocorr_time_steps']:.0f} steps. The least-squares bootstrap 95% CI for R0 was "
+        f"{lo:.2f} - {hi:.2f}; the negative-binomial model (k = dispersion) gives a lower median "
+        f"and a wider interval. On SYNTHETIC data the posterior median R0 was "
+        f"{rec['R0_median']:.3f} (95% CrI {rec['R0_ci95'][0]:.3f} - {rec['R0_ci95'][1]:.3f}; "
+        f"true {rec['true_R0']:.3f}).\n")
+
+
 def section_m3() -> str:
     m3 = load_json("m3_summary")
     s = m3["setup"]
@@ -226,7 +249,7 @@ def _inject(content: str, start: str, end: str, text: str) -> str:
 
 
 def build() -> str:
-    parts = [section_m1(), section_m2(), section_m3(), section_m4(), section_m5(),
+    parts = [section_m1(), section_m2(), section_m2_bayes(), section_m3(), section_m4(), section_m5(),
              section_m6(), section_m7()]
     return "\n".join(parts)
 

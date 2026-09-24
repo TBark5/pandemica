@@ -182,3 +182,16 @@ Each entry: the decision and the reason. Newest at the bottom.
   any doc still contains placeholder markers, or if a figure has no caption.
 - **CI workflow** (`.github/workflows/tests.yml`) and **Dockerfile** were added but could
   not be run here: there is no git remote, and Docker is not installed on this machine.
+
+## Stretch - Bayesian estimation (MCMC)
+- **emcee ensemble sampler, 24 walkers x 4000 steps, 1000 burn-in, thin 5.** The kept
+  chain is more than 50 autocorrelation times long (emcee's own rule of thumb).
+- **Negative-binomial likelihood** with a free dispersion k, because the flu counts are
+  more spread out than Poisson. Flat priors on log(beta), log(gamma), log(I0), log(k)
+  within wide bounds.
+- **Fast solver for the likelihood**: `scipy.integrate.odeint` on the 2-state SIR (R is
+  implied). It is ~8x faster than the general M1 right-hand side; a test checks the two
+  agree. Needed to keep each MCMC run under the ~2-minute cap.
+- **Result differs from least squares** (lower median R0, wider interval). The two methods
+  make different assumptions about the noise; both are reported rather than picking one.
+- `sampler.random_state` is seeded, so MCMC results are reproducible.

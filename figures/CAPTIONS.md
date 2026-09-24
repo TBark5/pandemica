@@ -22,6 +22,7 @@ Colours: Okabe-Ito palette (colorblind-safe) for categories; viridis/magma for c
 |---|---|
 | `m2_fit_observed.png` | SIR fitted by least squares to the boarding-school outbreak, with a 95% bootstrap confidence band for the fitted curve (left) and the bootstrap distribution of R0 (right). |
 | `m2_fit_synthetic_recovery.png` | The same fitting pipeline applied to SYNTHETIC data: the estimated R0 is compared with the true value used to generate the data. |
+| `m2_mcmc_posterior.png` | Bayesian SIR fit by MCMC (emcee) with a negative-binomial likelihood: 95% credible band for the mean curve and posterior predictive band for new data (left), R0 posterior compared with the least-squares bootstrap (middle), and the joint posterior of beta and gamma (right). |
 | `m2_covid_growth.png` | Log-linear fits to the first 14 days of COVID-19 growth in six countries, converted to R0 with assumed latent and infectious periods (a method demonstration, not an estimate of COVID-19's R0). |
 
 ## M3 - Stochastic model

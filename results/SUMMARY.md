@@ -46,6 +46,16 @@
 | Korea, South | 2020-02-18 | 0.230 | 3.0 | 4.7 (4.0 - 5.4) |
 | India | 2020-03-17 | 0.152 | 4.6 | 3.1 (2.8 - 3.5) |
 
+### M2 (stretch) - Bayesian fit with MCMC (emcee, negative-binomial likelihood)
+| Parameter | Posterior median | 95% credible interval |
+|---|---|---|
+| R0 | 3.617 | 2.913 - 4.521 |
+| beta | 1.888 | 1.668 - 2.148 |
+| gamma | 0.521 | 0.449 - 0.612 |
+| k | 12.301 | 3.510 - 48.871 |
+
+24 walkers x 4000 steps (1000 burn-in), acceptance 0.59, max autocorrelation time 46 steps. The least-squares bootstrap 95% CI for R0 was 3.41 - 4.60; the negative-binomial model (k = dispersion) gives a lower median and a wider interval. On SYNTHETIC data the posterior median R0 was 3.465 (95% CrI 3.264 - 3.683; true 3.556).
+
 ### M3 - Gillespie stochastic SIR (N = 1000, I0 = 2, R0 = 2.5, 500 replicates)
 | Quantity | Simulated | Theory / ODE |
 |---|---|---|

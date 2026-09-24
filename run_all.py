@@ -18,6 +18,7 @@ STEPS = {
     "m1": ("analysis.m1_compartmental", "M1 compartmental models"),
     "data": ("analysis.data_overview", "Data download / cache / summary"),
     "m2": ("analysis.m2_fitting", "M2 parameter estimation"),
+    "m2b": ("analysis.m2_bayes", "M2 Bayesian MCMC fit (stretch goal)"),
     "m3": ("analysis.m3_stochastic", "M3 Gillespie stochastic model"),
     "m4": ("analysis.m4_network", "M4 network epidemics"),
     "m5": ("analysis.m5_interventions", "M5 interventions"),
