@@ -1,0 +1,161 @@
+{
+  "n_samples": 800,
+  "ranges": {
+    "beta": [
+      0.2,
+      0.6
+    ],
+    "infectious_period": [
+      4.0,
+      10.0
+    ],
+    "latent_period": [
+      2.0,
+      7.0
+    ],
+    "ifr": [
+      0.002,
+      0.02
+    ],
+    "vaccination_rate": [
+      0.0,
+      0.005
+    ],
+    "isolation_rate": [
+      0.0,
+      0.1
+    ],
+    "initial_infected": [
+      1.0,
+      100.0
+    ]
+  },
+  "prcc": {
+    "cumulative_deaths": {
+      "beta": {
+        "prcc": 0.8570313436846332,
+        "p_value": 2.799198569459922e-230
+      },
+      "ifr": {
+        "prcc": 0.697424798377335,
+        "p_value": 1.0361472058902171e-116
+      },
+      "infectious_period": {
+        "prcc": 0.6561363250494802,
+        "p_value": 6.393659332875609e-99
+      },
+      "vaccination_rate": {
+        "prcc": -0.6345798653978191,
+        "p_value": 1.0563293684488364e-90
+      },
+      "isolation_rate": {
+        "prcc": -0.5328256520945911,
+        "p_value": 1.9647103189864793e-59
+      },
+      "initial_infected": {
+        "prcc": 0.18754562854901327,
+        "p_value": 1.0170934364828219e-07
+      },
+      "latent_period": {
+        "prcc": -0.16884195594361065,
+        "p_value": 1.7139253591738694e-06
+      }
+    },
+    "peak_infectious": {
+      "beta": {
+        "prcc": 0.940076824675026,
+        "p_value": 0.0
+      },
+      "infectious_period": {
+        "prcc": 0.865159397740157,
+        "p_value": 1.3417409957632205e-239
+      },
+      "isolation_rate": {
+        "prcc": -0.7909710075715501,
+        "p_value": 3.791454676102251e-171
+      },
+      "vaccination_rate": {
+        "prcc": -0.7527627203610315,
+        "p_value": 5.792289304783e-146
+      },
+      "latent_period": {
+        "prcc": -0.512070337088928,
+        "p_value": 2.764103146057552e-54
+      },
+      "initial_infected": {
+        "prcc": 0.3633809161682195,
+        "p_value": 3.414384451086447e-26
+      },
+      "ifr": {
+        "prcc": -0.016128083251997126,
+        "p_value": 0.6499938314205967
+      }
+    },
+    "peak_day": {
+      "latent_period": {
+        "prcc": 0.3143103181670354,
+        "p_value": 1.1511662666564565e-19
+      },
+      "vaccination_rate": {
+        "prcc": -0.17515398108427493,
+        "p_value": 6.829377088143258e-07
+      },
+      "beta": {
+        "prcc": -0.13967491933651358,
+        "p_value": 7.850035821880601e-05
+      },
+      "initial_infected": {
+        "prcc": -0.12590618247105068,
+        "p_value": 0.00037603280187531153
+      },
+      "isolation_rate": {
+        "prcc": -0.046502465599526754,
+        "p_value": 0.19053755528356178
+      },
+      "infectious_period": {
+        "prcc": 0.039717610045942674,
+        "p_value": 0.2636349289018104
+      },
+      "ifr": {
+        "prcc": -0.004192070574387739,
+        "p_value": 0.9061163021571037
+      }
+    },
+    "attack_rate": {
+      "beta": {
+        "prcc": 0.9476039090707705,
+        "p_value": 0.0
+      },
+      "vaccination_rate": {
+        "prcc": -0.8663258374560412,
+        "p_value": 5.500648665759769e-241
+      },
+      "infectious_period": {
+        "prcc": 0.8563293965409434,
+        "p_value": 1.677614698899062e-229
+      },
+      "isolation_rate": {
+        "prcc": -0.7634043569346082,
+        "p_value": 1.7034184735576295e-152
+      },
+      "initial_infected": {
+        "prcc": 0.35007786153109033,
+        "p_value": 2.627979627039912e-24
+      },
+      "latent_period": {
+        "prcc": -0.3486241355920725,
+        "p_value": 4.172162313845393e-24
+      },
+      "ifr": {
+        "prcc": -0.02091700322939612,
+        "p_value": 0.5561730774908934
+      }
+    }
+  },
+  "top_driver": {
+    "cumulative_deaths": "beta",
+    "peak_infectious": "beta",
+    "peak_day": "latent_period",
+    "attack_rate": "beta"
+  }
+}

@@ -121,3 +121,11 @@ Each entry: the decision and the reason. Newest at the bottom.
 - **Heatmap grid: 16 start days (0-150, step 10) x 13 strengths** per intervention,
   208 ODE runs each, about 30 s per heatmap on CPU.
 - **Heatmaps use a log colour scale** because outcomes span several orders of magnitude.
+- **M6 samples 7 SEIRD parameters** (beta, infectious and latent periods, IFR,
+  vaccination rate, isolation rate, initial infected) with uniform ranges listed in
+  `src/sensitivity.py`. 800 LHS samples (~90 s) is a common size for PRCC with 7 inputs.
+- **PRCC implemented directly** (rank, regress out the other ranked parameters,
+  correlate residuals) instead of adding a sensitivity-analysis library. It is about
+  15 lines and is tested on functions with known monotone effects.
+- **Periods rather than rates are sampled** (e.g. infectious period 4-10 days), because
+  those are the quantities people actually quote and reason about.
