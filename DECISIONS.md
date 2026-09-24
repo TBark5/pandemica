@@ -179,6 +179,6 @@ Each entry: the decision and the reason. Newest at the bottom.
   fails with WinError 206 (path > 260 characters). Keep the project path short, or enable
   long paths in Windows.
 - **`tests/test_docs.py`** fails if the README results tables drift from `results/`, if
-  any doc contains TODO/TBD/FIXME, or if a figure has no caption.
+  any doc still contains placeholder markers, or if a figure has no caption.
 - **CI workflow** (`.github/workflows/tests.yml`) and **Dockerfile** were added but could
   not be run here: there is no git remote, and Docker is not installed on this machine.
