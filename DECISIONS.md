@@ -55,3 +55,29 @@ Each entry: the decision and the reason. Newest at the bottom.
   it instead and every label says SYNTHETIC.
 - **Tests never need the network**: downloads are monkeypatched to fail in the fallback
   tests, and the real-data test is skipped if the cache is missing.
+
+## Phase 3 - Fitting (M2)
+- **Fit SIR to prevalence with free beta, gamma and I0; N = 763 is known.** Both
+  beta and gamma are identifiable because the whole rise and fall of I(t) is observed.
+- **Parameters are optimised on a log scale** with `scipy.optimize.least_squares`
+  (keeps them positive, and puts beta and gamma on comparable scales).
+- **Least squares on square-root counts.** A first version used raw counts. A coverage
+  check (20 synthetic datasets, 100 bootstrap refits each, run once in a scratch script
+  during development, not saved in results/) showed its 95% CI for R0 contained the true
+  value only 65% of the time, because count noise is much larger near the peak and the
+  plain residual bootstrap ignores that. The square root makes Poisson noise roughly
+  equal in size (variance-stabilising transform); the same check gave 90%. The final
+  pipeline re-runs a smaller version (20 datasets x 50 refits) and saves the coverage
+  to `results/m2_summary.json`.
+- **Residual bootstrap (500 refits)**, not case resampling: resampling days would break
+  the time structure of an epidemic curve.
+- **The shaded band is a confidence band for the fitted curve**, not a prediction
+  interval for new observations, so some data points are expected outside it.
+- **I0 is weakly identified.** Its CI can miss the true value on synthetic data (the
+  day-0 observation is a single small noisy count). This is reported, not hidden.
+- **COVID-19 R0 from early growth rates** (secondary analysis): 14-day window from the
+  first day the 7-day-average daily cases reach 20, log-linear regression, and
+  R0 = (1 + r/sigma)(1 + r/gamma) with an assumed 5.2-day latent period and 5-day
+  infectious period. These assumed values drive the result strongly, and early 2020
+  case growth also reflects testing ramp-up. The numbers are shown as a demonstration
+  of the method, not as estimates of COVID-19's R0.
