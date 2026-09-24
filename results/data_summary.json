@@ -1,0 +1,8 @@
+{
+  "fit_dataset": "Boarding-school influenza, England 1978",
+  "fit_dataset_is_synthetic": false,
+  "jhu_available": true,
+  "jhu_first_date": "2020-01-22",
+  "jhu_last_date": "2023-03-09",
+  "jhu_n_countries": 201
+}

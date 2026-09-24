@@ -36,3 +36,22 @@ Each entry: the decision and the reason. Newest at the bottom.
   differences of C, not from numerical differentiation.
 - **The stochastic-vs-deterministic convergence test (rule 10) is added in Phase 4**,
   because it needs the M3 Gillespie code.
+
+## Phase 2 - Data layer
+- **Primary fitting dataset: the 1978 English boarding-school influenza outbreak**
+  (763 boys, daily number confined to bed). It is real, public, a closed population and
+  a single wave, which is exactly what SIR assumes. National COVID-19 series break
+  those assumptions (interventions, variants, changing testing), so fitting a
+  constant-parameter SIR to them would be hard to defend.
+- **JHU CSSE COVID-19 is still used** for the data summary table and exploratory plots,
+  and for an early-growth-rate R0 estimate in M2, which only needs the first weeks.
+- **"In bed" is treated as the infectious prevalence I(t).** Standard simplification in
+  textbook treatments of this dataset; it is listed under Limitations.
+- **The R data file is parsed with the pure-Python `rdata` package** (no R needed) and
+  converted to CSV once.
+- **Synthetic outbreak is always generated**, not only on download failure: SIR with
+  beta=1.6, gamma=0.45, I0=2, N=1000, Poisson observation noise, seed 42. It exists to
+  test parameter recovery. If the real download fails, `get_fit_dataset()` returns
+  it instead and every label says SYNTHETIC.
+- **Tests never need the network**: downloads are monkeypatched to fail in the fallback
+  tests, and the real-data test is skipped if the cache is missing.

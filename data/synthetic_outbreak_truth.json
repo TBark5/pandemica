@@ -1,0 +1,9 @@
+{
+  "label": "SYNTHETIC - generated data, not a real outbreak",
+  "N": 1000,
+  "beta": 1.6,
+  "gamma": 0.45,
+  "I0": 2.0,
+  "R0": 3.555555555555556,
+  "source": "generated: SIR, beta=1.6, gamma=0.45, I0=2.0, Poisson noise, seed=42"
+}
