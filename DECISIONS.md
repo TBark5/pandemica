@@ -18,3 +18,21 @@ Each entry: the decision and the reason. Newest at the bottom.
   colormaps: both are colorblind-safe.
 - **Data, results and figures are committed** so the README renders on GitHub and the
   project runs offline straight after cloning. The raw files are small (< 2 MB).
+
+## Phase 1 - Core engine (M1)
+- **One general ODE right-hand side** covers SIR, SEIR and SEIRD (unused compartments
+  stay at zero). Less code, and every model shares the same, tested conservation logic.
+- **Force of infection uses the living population** (`beta S I / (N - D)`). Because of
+  this, SEIRD's attack rate is slightly higher than SEIR's; the final-size-equation test
+  is therefore applied to SIR and SEIR only (the equation assumes a closed population).
+- **Solver: RK45 with rtol=atol=1e-8, `max_step=0.5` day.** Runge-Kutta methods keep
+  linear invariants (here the population total) exactly apart from rounding, which is why
+  conservation holds to ~1e-15. `max_step` stops the solver skipping over step-function
+  interventions in M5.
+- **Vaccine is perfect and all-or-nothing** (S -> V). Simplest defensible choice.
+- **Testing/isolation is an extra removal rate `kappa` from I.** Isolated people are
+  counted as removed, so R0 becomes beta / (gamma + kappa).
+- **Cumulative infections `C` is tracked as an extra ODE state** so incidence comes from
+  differences of C, not from numerical differentiation.
+- **The stochastic-vs-deterministic convergence test (rule 10) is added in Phase 4**,
+  because it needs the M3 Gillespie code.

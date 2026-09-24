@@ -1,0 +1,56 @@
+{
+  "base_params": {
+    "beta": 0.3,
+    "gamma": 0.1,
+    "sigma": 0.2,
+    "ifr": 0.01,
+    "nu": 0.0,
+    "omega": 0.0,
+    "omega_v": 0.0,
+    "kappa": 0.0,
+    "R0": 2.9999999999999996,
+    "N": 1000000,
+    "I0": 10
+  },
+  "epidemic_curves": {
+    "SIR": {
+      "peak_day": 61.0,
+      "peak_infectious_pct": 30.02314320129429,
+      "attack_rate_pct": 94.04804552877,
+      "deaths": 0.0
+    },
+    "SEIR": {
+      "peak_day": 120.0,
+      "peak_infectious_pct": 19.638817839023663,
+      "attack_rate_pct": 94.04507112716595,
+      "deaths": 0.0
+    },
+    "SEIRD": {
+      "peak_day": 120.0,
+      "peak_infectious_pct": 19.681865726603085,
+      "attack_rate_pct": 94.14112666486278,
+      "deaths": 9412.762861222856
+    }
+  },
+  "vaccination_waning": {
+    "SEIR baseline": {
+      "peak_infectious_pct": 19.638817839023663,
+      "cumulative_infections_pct": 94.04805152898781
+    },
+    "Vaccination 0.5%/day": {
+      "peak_infectious_pct": 3.0349335907556547,
+      "cumulative_infections_pct": 26.928182775105412
+    },
+    "Waning immunity (1/180 d)": {
+      "peak_infectious_pct": 20.30668163561387,
+      "cumulative_infections_pct": 277.3398802337158
+    },
+    "Vaccination + waning": {
+      "peak_infectious_pct": 5.241027945051608,
+      "cumulative_infections_pct": 73.13831957621333
+    }
+  },
+  "max_abs_final_size_error": 2.88159496264484e-11,
+  "max_abs_peak_error": 1.546477361835663e-06,
+  "max_conservation_error_rel": 4.1909515857696534e-15
+}
