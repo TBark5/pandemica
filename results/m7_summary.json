@@ -1,0 +1,19 @@
+{
+  "setup": {
+    "regions": 8,
+    "total_population": 5300000,
+    "daily_travel_fraction": 0.002,
+    "R0_within_region": 2.5,
+    "seed_region": "Capital"
+  },
+  "baseline_last_arrival_day": 52.0,
+  "restricted_last_arrival_day": 66.0,
+  "mean_arrival_delay_days_outside_capital": 13.571428571428571,
+  "baseline_overall_attack_rate": 0.8899165161330228,
+  "restricted_overall_attack_rate": 0.8915368099726585,
+  "animation": {
+    "gif": "m7_spatial_spread.gif",
+    "frames": 91,
+    "mp4": "m7_spatial_spread.mp4"
+  }
+}

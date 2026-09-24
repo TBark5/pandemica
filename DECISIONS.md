@@ -129,3 +129,20 @@ Each entry: the decision and the reason. Newest at the bottom.
   15 lines and is tested on functions with known monotone effects.
 - **Periods rather than rates are sampled** (e.g. infectious period 4-10 days), because
   those are the quantities people actually quote and reason about.
+
+## Phase 6 - Spatial (M7)
+- **8 fictional regions on a made-up map** (a 2M "Capital" plus cities and towns,
+  5.3M people in total). Fictional so nobody mistakes it for a forecast for a real place.
+- **Gravity-model travel** F_ij ~ P_i P_j / d_ij^2, symmetric, scaled so 0.2% of the
+  total population travels per day. Symmetric flows keep every region's population
+  constant.
+- **Migration-style coupling** (people move between regions and take their infection
+  state with them) rather than commuting-style mixing. Simpler to write and explain.
+- **Per-region attack rate = (E + I + R) / P at the end**, not infections counted by
+  location. The location-based count credited the first-hit region with its visitors'
+  infections and gave misleading differences between regions (caught by a test).
+- **Arrival day = first day prevalence exceeds 1 in 10,000.** A deterministic ODE puts a
+  tiny fraction of an infected person everywhere immediately, so a threshold is needed.
+- **Animation**: 91 frames (days 0-180, every 2 days). GIF at 65 dpi (~1.4 MB, so it
+  can go in the README) and MP4 at 120 dpi through the ffmpeg binary bundled with
+  `imageio-ffmpeg` (no system install needed). The static snapshot figure is 300 dpi.
