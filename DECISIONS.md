@@ -81,3 +81,16 @@ Each entry: the decision and the reason. Newest at the bottom.
   infectious period. These assumed values drive the result strongly, and early 2020
   case growth also reflects testing ramp-up. The numbers are shown as a demonstration
   of the method, not as estimates of COVID-19's R0.
+
+## Phase 4 - Stochastic (M3) and network (M4)
+- **Gillespie direct method in pure Python/NumPy**, with random numbers pre-drawn in
+  blocks of 4096. Fast enough: 500 replicates at N = 1000 take about a second.
+- **Major vs minor outbreak cut-off: final size above 10% of N.** Final sizes are
+  bimodal (see `m3_stochastic_spaghetti.png`), so any cut-off in the empty middle gives
+  the same answer.
+- **Convergence test uses I0 = 1% of N**, not a fixed I0. With a fixed number of seeds,
+  the random delay of the early phase does not shrink as N grows, so the ensemble mean
+  is smeared in time and never matches the ODE curve. Scaling I0 with N is the setting
+  of Kurtz's law of large numbers, under which the stochastic model converges to the ODE.
+- **Replicate counts** (runtime cap): 500 for the main ensemble, 400 per cell of the
+  extinction table, 40 per N in the convergence study (N up to 30,000).

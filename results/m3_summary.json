@@ -1,0 +1,23 @@
+{
+  "setup": {
+    "N": 1000,
+    "I0": 2,
+    "beta": 0.25,
+    "gamma": 0.1,
+    "R0": 2.5,
+    "n_reps": 500,
+    "major_outbreak_threshold_fraction": 0.1
+  },
+  "extinction_probability_simulated": 0.17,
+  "extinction_probability_theory": 0.16000000000000003,
+  "major_outbreak_mean_attack_rate": 0.8914819277108433,
+  "final_size_equation_attack_rate": 0.8929379750880361,
+  "major_outbreak_peak_I_median": 244.0,
+  "major_outbreak_peak_I_p5_p95": [
+    200.0,
+    282.29999999999995
+  ],
+  "deterministic_peak_I": 234.28247415382017,
+  "convergence_loglog_slope": -0.8653795902241305,
+  "extinction_max_abs_error": 0.048055555555555574
+}
