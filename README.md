@@ -54,22 +54,26 @@ One tab per module with live sliders. `?tab=m1` ... `?tab=m7` in the URL opens a
 
 ## Quick start
 
-Requires Python 3.11+ (developed and tested on Python 3.14, Windows 11, CPU only).
+Tested on Python 3.14 (Windows 11, CPU only, no GPU needed). The pinned versions in
+`requirements.txt` were only tested on 3.14. From the project folder:
 
 ```bash
-git clone <this repo> pandemica && cd pandemica
 python -m venv .venv
 # Windows:  .venv\Scripts\activate      macOS/Linux:  source .venv/bin/activate
 pip install -r requirements.txt
 
-pytest                  # full test suite, including the analytical validation tests
-python run_all.py       # regenerate every result and figure (~10 min on a laptop)
+pytest                  # full test suite, including the analytical validation tests (~1 min)
+python run_all.py       # regenerate every result and figure (~10 min on a laptop CPU)
 streamlit run app.py    # open the dashboard
 ```
 
 `python run_all.py m3 m5` reruns only some steps. The data is cached in `data/`, so after
 the first run everything works offline. If a download fails, the project falls back to a
-clearly labelled synthetic dataset and keeps going.
+clearly labelled synthetic dataset and keeps going. Seeds are fixed, so a rerun in a fresh
+environment reproduces `results/` exactly.
+
+On Windows, keep the project in a short path (for example `C:\projects\pandemica`):
+Streamlit's install contains deeply nested files that can exceed the 260-character path limit.
 
 ## Figures
 
