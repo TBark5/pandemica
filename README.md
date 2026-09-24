@@ -51,6 +51,8 @@ streamlit run app.py
 
 One tab per module with live sliders. `?tab=m1` ... `?tab=m7` in the URL opens a single module.
 
+![Tour of the dashboard tabs](docs/dashboard_demo.gif)
+
 | M1 - compartmental models | M5 - intervention simulator |
 |---|---|
 | ![M1 tab](docs/screenshots/dash_m1.png) | ![M5 tab](docs/screenshots/dash_m5.png) |
