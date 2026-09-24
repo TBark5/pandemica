@@ -5,7 +5,8 @@
     "tau": 0.06,
     "gamma": 0.2,
     "initial_infected": 5,
-    "runs": 50
+    "runs": 50,
+    "vaccination_runs": 20
   },
   "superspreaders_barabasi_albert": {
     "top1pct_degree_share_of_infections": 0.17560534677330997,

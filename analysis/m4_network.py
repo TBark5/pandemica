@@ -189,7 +189,8 @@ def main() -> dict:
     save_csv("m4_vaccination", vacc)
     fig_vaccination(vacc)
     results = {"setup": {"nodes": N_NODES, "mean_degree": MEAN_DEGREE, "tau": TAU,
-                         "gamma": GAMMA, "initial_infected": N_SEEDS, "runs": N_RUNS},
+                         "gamma": GAMMA, "initial_infected": N_SEEDS, "runs": N_RUNS,
+                         "vaccination_runs": VACC_RUNS},
                "superspreaders_barabasi_albert": spreaders,
                "attack_rate_mean": dict(zip(table["network"], table["attack_rate_mean"]))}
     save_json("m4_summary", results)

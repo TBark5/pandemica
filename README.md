@@ -18,7 +18,7 @@ Every number below is generated from the saved runs in [`results/`](results/) by
 
 <!-- HEADLINES:START -->
 - **Real-data fit:** 1978 boarding-school influenza outbreak, R0 = 3.93 (95% bootstrap CI 3.41 - 4.60), infectious period 2.0 days.
-- **Calibrated uncertainty:** on synthetic data with known truth, the 95% CI for R0 covered the true value in 95% of 20 datasets.
+- **Parameter recovery:** on synthetic data with known truth, the fit recovers beta, gamma and R0 within 2.6%, and the 95% CI for R0 contained the true value in 19 of 20 datasets (a small, suggestive check).
 - **Stochastic vs theory:** simulated early-extinction probability 0.17 vs branching-process theory 0.16.
 - **Network structure:** vaccinating the 10% best-connected nodes of a scale-free network cut the attack rate to 2.8%, vs 58.8% for random vaccination.
 - **Interventions:** a 60-day lockdown alone averted 0.5% of deaths (it mostly delays the wave); combined with vaccination and isolation, 99.6%. Cutting travel by 90% delayed regional arrival by 13.6 days on average.
@@ -32,7 +32,7 @@ Every number below is generated from the saved runs in [`results/`](results/) by
 | **M2** Fitting | What R0 do real outbreak data imply, and how sure are we? | Least squares on square-root counts, residual bootstrap CIs, parameter-recovery and CI-coverage checks | [`src/fitting.py`](src/fitting.py) |
 | **M3** Stochastic | What does chance do when case numbers are small? | Exact Gillespie simulation, extinction probability vs branching theory | [`src/stochastic.py`](src/stochastic.py) |
 | **M4** Network | How does who-contacts-whom change the epidemic? | Erdos-Renyi, Watts-Strogatz and Barabasi-Albert networks (NetworkX), superspreaders, targeted vaccination | [`src/network.py`](src/network.py) |
-| **M5** Interventions | When and how hard should we intervene? | Lockdown / vaccination / test-and-isolate counterfactuals, start-day x strength heatmaps | [`src/interventions.py`](src/interventions.py) |
+| **M5** Interventions | How do intervention timing and strength change model outcomes? | Lockdown / vaccination / test-and-isolate counterfactuals, start-day x strength heatmaps | [`src/interventions.py`](src/interventions.py) |
 | **M6** Sensitivity | Which parameters matter most? | Latin hypercube sampling + partial rank correlation (PRCC), tornado plot | [`src/sensitivity.py`](src/sensitivity.py) |
 | **M7** Spatial | How does an epidemic travel between regions? | 8-region metapopulation SEIR with a gravity-model travel matrix, animated map | [`src/metapopulation.py`](src/metapopulation.py) |
 
@@ -121,18 +121,18 @@ A selection (all 300 dpi; captions for every figure are in [figures/CAPTIONS.md]
 | I0 | 2.000 | 2.656 | 2.163 - 3.220 | +32.8% | no |
 | R0 | 3.556 | 3.466 | 3.344 - 3.571 | -2.5% | yes |
 
-**CI calibration:** over 20 synthetic datasets, the 95% CI for R0 contained the true value 95% of the time; mean estimate 3.547 vs true 3.556. The same check with least squares on raw counts gave 80% coverage, which is why the square-root scale is used (a small study: 20 datasets, 50 refits each).
+**CI coverage check (small, suggestive only):** over 20 synthetic datasets (50 refits each), the 95% CI for R0 contained the true value in 19 of 20 datasets with the square-root scale and in 16 of 20 with raw counts; mean estimate 3.547 vs true 3.556. With only 20 datasets these rates are uncertain, and the synthetic noise (independent Poisson) matches what the bootstrap assumes, so real data may be less well covered.
 
-**COVID-19 early growth (JHU CSSE)**: method demonstration only; assumes a 5.2-day latent and 5.0-day infectious period.
+**COVID-19 early growth (JHU CSSE)**: method demonstration only; assumes a 5.2-day latent and 5.0-day infectious period, and ignores the growth of testing in early 2020. Fitted to raw daily counts (zero-report days dropped) over 14 days.
 
 | Country | Window start | Growth rate r (/day) | Doubling time (days) | Implied R0 (95% CI) |
 |---|---|---|---|---|
-| US | 2020-03-02 | 0.287 | 2.4 | 6.1 (5.8 - 6.4) |
-| United Kingdom | 2020-02-29 | 0.239 | 2.9 | 4.9 (4.5 - 5.3) |
-| Italy | 2020-02-20 | 0.258 | 2.7 | 5.4 (4.9 - 5.8) |
-| Germany | 2020-02-29 | 0.241 | 2.9 | 5.0 (4.6 - 5.4) |
-| Korea, South | 2020-02-18 | 0.230 | 3.0 | 4.7 (4.0 - 5.4) |
-| India | 2020-03-17 | 0.152 | 4.6 | 3.1 (2.8 - 3.5) |
+| US | 2020-03-02 | 0.262 | 2.6 | 5.5 (4.1 - 6.9) |
+| United Kingdom | 2020-02-29 | 0.276 | 2.5 | 5.8 (4.3 - 7.4) |
+| Italy | 2020-02-20 | 0.259 | 2.7 | 5.4 (4.4 - 6.5) |
+| Germany | 2020-02-29 | 0.254 | 2.7 | 5.3 (4.2 - 6.7) |
+| Korea, South | 2020-02-18 | 0.346 | 2.0 | 7.7 (4.1 - 12.5) |
+| India | 2020-03-17 | 0.125 | 5.5 | 2.7 (1.6 - 3.9) |
 
 ### M2 (stretch) - Bayesian fit with MCMC (emcee, negative-binomial likelihood)
 | Parameter | Posterior median | 95% credible interval |
@@ -153,14 +153,16 @@ A selection (all 300 dpi; captions for every figure are in [figures/CAPTIONS.md]
 
 Across 15 (R0, I0) combinations the largest gap between simulated and theoretical extinction probability was 0.048. The gap between the stochastic mean and the ODE shrinks with population size with log-log slope -0.87.
 
-### M4 - Network epidemics (2000 nodes, mean degree 8, 50 runs each)
+### M4 - Network epidemics (2000 nodes, mean degree 8, 50 runs per network)
 | Network | Max degree | Clustering | Approx. R0 | Attack rate | Peak prevalence | Peak day |
 |---|---|---|---|---|---|---|
-| Erdos-Renyi | 19 | 0.003 | 1.83 | 80.2% | 19.4% | 29 |
-| Watts-Strogatz | 12 | 0.471 | 1.64 | 59.9% | 5.8% | 64 |
-| Barabasi-Albert | 137 | 0.021 | 4.11 | 73.3% | 23.8% | 17 |
+| Erdos-Renyi | 19 | 0.003 | 2.02 | 80.2% | 19.4% | 29 |
+| Watts-Strogatz | 12 | 0.471 | 1.81 | 59.9% | 5.8% | 64 |
+| Barabasi-Albert | 137 | 0.021 | 4.53 | 73.3% | 23.8% | 17 |
 
-Attack rate with 10% of nodes vaccinated:
+(Approx. R0 = transmissibility x mean excess degree; it assumes a tree-like network, so it overstates R0 for the clustered Watts-Strogatz network.)
+
+Attack rate with 10% of nodes vaccinated (mean of 20 runs):
 
 | Network | random (10% vaccinated) | degree (10% vaccinated) | betweenness (10% vaccinated) |
 |---|---|---|---|
@@ -231,7 +233,8 @@ expresses interventions.
 curve and the data (the square root makes count noise equally sized, which least squares
 assumes). Uncertainty comes from a residual bootstrap: resample the residuals, rebuild
 pseudo-datasets, refit, and take percentiles. The same pipeline is run on synthetic data with
-known parameters to show that it recovers them and that its 95% intervals really cover 95%.
+known parameters to show that it recovers them, and to check how often its 95% intervals
+contain the truth.
 
 **M3 - Stochastic.** The Gillespie algorithm draws the time to the next event from an
 exponential distribution and picks infection or recovery in proportion to their rates. It
@@ -240,8 +243,8 @@ which the ODE cannot show.
 
 **M4 - Network.** Each person is a node; infection only travels along edges. With the same
 mean number of contacts, networks with hubs (scale-free) spread faster, and clustered
-networks (small-world) spread slower. Removing the hubs first is far more effective than
-vaccinating at random.
+networks (small-world) spread slower. In these simulations, removing the hubs first is far
+more effective than vaccinating at random.
 
 **M5 - Interventions.** The SEIRD model re-run with time-varying contact, vaccination and
 isolation rates. The heatmaps sweep when an intervention starts against how strong it is.
@@ -263,7 +266,8 @@ of the code:
 - simulated final epidemic size matches the final-size equation ln(s0/s_inf) = R0 (1 - s_inf);
 - no epidemic occurs when R0 < 1 (ODE, stochastic, and isolation above the threshold);
 - SIR peak prevalence and the S = N/R0 peak condition match closed-form results;
-- the stochastic ensemble mean approaches the ODE as population size grows;
+- the stochastic ensemble mean approaches the ODE as population size grows (with the initial
+  number infected a fixed fraction of N);
 - the simulated extinction probability matches (1/R0)^I0;
 - the fitting code recovers known parameters from synthetic data;
 - PRCC detects known monotone effects and ignores irrelevant inputs;
@@ -283,8 +287,9 @@ Details in [data/SOURCES.md](data/SOURCES.md).
 
 - **These are simplified educational models, not forecasting tools.** Nothing here should
   inform public-health, clinical or policy decisions.
-- Populations are homogeneous within each compartment, network or region: no age
-  structure, households, schools or workplaces.
+- M1-M7 assume homogeneous mixing within each compartment, network or region. Only the
+  separate age-structured extension has age groups, and its contact matrix is illustrative.
+  No model has households, schools or workplaces.
 - Parameters are constant apart from the explicit interventions: no seasonality, behaviour
   change, new variants or changes in testing.
 - The flu fit treats "confined to bed" as the infectious prevalence and assumes a closed

@@ -132,10 +132,18 @@ $\beta/(\beta+\gamma)$. The probability $q$ that one person's chain of infection
 solves $q = \frac{\gamma}{\beta+\gamma} + \frac{\beta}{\beta+\gamma} q^2$, whose smallest
 root is $q = 1/R_0$ (for $R_0 > 1$). Chains started by $I_0$ people are independent, so
 $$P(\text{extinction}) = (1/R_0)^{I_0}.$$
+This neat answer relies on the **exponentially distributed infectious period** of the Markov
+SIR model (it makes the offspring distribution geometric). In general, $q$ is the smallest root
+of $q = G(q)$, where $G$ is the probability generating function of the offspring distribution.
+For example, a fixed-length infectious period gives Poisson offspring and a higher extinction
+probability for the same $R_0$.
 
 **Convergence to the ODE.** With $I_0$ a fixed fraction of N, the scaled process $I/N$
-converges to the ODE solution as $N \to \infty$ (Kurtz's law of large numbers). Fluctuations
-shrink roughly like $1/\sqrt{N}$.
+converges to the ODE solution as $N \to \infty$ (Kurtz's law of large numbers), and random
+fluctuations shrink roughly like $1/\sqrt{N}$. With a *fixed* $I_0$ this fails: runs that die
+out early and random delays keep the mean away from the ODE curve. The convergence test's
+measured log-log slope (see `results/m3_summary.json`) mixes the finite-N bias with Monte Carlo
+error from a finite number of replicates, so it need not equal -1/2.
 
 ---
 
@@ -148,15 +156,23 @@ k_v = \sum_u A_{vu}\,[x_u = I]
 $$
 and each infectious node recovers with probability $1 - e^{-\gamma}$.
 
-**Network R0.** An infection passes along an edge before the infector recovers with
-probability $T = \tau/(\tau+\gamma)$ (transmissibility). A newly infected node was reached
-through one edge, so it has on average $\langle k^2\rangle/\langle k\rangle - 1$ further
-neighbours (the mean excess degree), giving
+**Network R0.** The transmissibility $T$ is the probability that an infection passes along a
+given edge before the infector recovers. In this daily-step model the infector transmits
+with probability $p$ per day and recovers with probability $q_r = 1 - e^{-\gamma}$ per day
+(and can still transmit on its last day), so
+$$
+T = 1 - \sum_{n\ge1} (1-p)^n (1-q_r)^{n-1} q_r = 1 - \frac{q_r (1-p)}{1 - (1-q_r)(1-p)},
+$$
+which tends to the continuous-time value $\tau/(\tau+\gamma)$ for small daily rates. A newly
+infected node was reached through one edge, so it has on average
+$\langle k^2\rangle/\langle k\rangle - 1$ further neighbours (the mean excess degree), giving
 $$
 R_0 \approx T \left(\frac{\langle k^2\rangle}{\langle k\rangle} - 1\right).
 $$
 For equal mean degree $\langle k\rangle$, a heavy-tailed (scale-free) degree distribution has a
-much larger $\langle k^2\rangle$, so a higher $R_0$. This is why hubs matter.
+much larger $\langle k^2\rangle$, so a higher $R_0$. This is why hubs matter. The formula assumes
+a locally tree-like network. On clustered networks (Watts-Strogatz) many neighbours of a new
+case are already infected, so it overstates $R_0$.
 
 **Networks.** Erdos-Renyi $G(n, p)$ with $p = \langle k\rangle/(n-1)$ (Poisson degrees);
 Watts-Strogatz ring lattice with each node linked to its $\langle k\rangle$ nearest neighbours,

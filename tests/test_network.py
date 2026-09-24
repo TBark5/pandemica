@@ -58,9 +58,23 @@ def test_vaccinated_nodes_are_never_infected():
 
 
 def test_network_r0_formula_on_regular_graph():
-    """On a k-regular graph the excess degree is k - 1."""
+    """On a k-regular graph the excess degree is k - 1, and T matches the daily-step model.
+
+    T = 1 - P(no transmission) where the infector survives n days without transmitting
+    with probability (1-p)^n (1-q)^(n-1) q, summed over n >= 1.
+    """
+    tau, gamma = 0.2, 0.2
+    p, q = 1 - np.exp(-tau), 1 - np.exp(-gamma)
+    n = np.arange(1, 2000)
+    T = 1 - np.sum((1 - p) ** n * (1 - q) ** (n - 1) * q)
     G = nx.random_regular_graph(6, 200, seed=0)
-    assert network_r0(G, tau=0.2, gamma=0.2) == pytest.approx(0.5 * 5)
+    assert network_r0(G, tau=tau, gamma=gamma) == pytest.approx(T * 5)
+
+
+def test_transmissibility_tends_to_continuous_time_limit():
+    """For small daily rates the discrete-time T approaches tau / (tau + gamma)."""
+    G = nx.random_regular_graph(2, 100, seed=0)  # excess degree 1, so R0 = T
+    assert network_r0(G, tau=1e-4, gamma=3e-4) == pytest.approx(0.25, rel=1e-3)
 
 
 def test_degree_targeting_beats_random_on_scale_free_network():

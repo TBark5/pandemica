@@ -25,6 +25,8 @@ from scipy.special import gammaln
 from src.fitting import fit_sir
 
 PARAM_NAMES = ("beta", "gamma", "I0", "k")
+# Flat-prior bounds (natural units): beta, gamma, I0 (capped at 100 initial cases: fine for
+# small outbreaks like the flu data, but raise it for larger ones), k (dispersion).
 LOG_BOUNDS = np.log(np.array([[1e-2, 20.0], [1e-2, 10.0], [1e-2, 100.0], [0.1, 1e4]]))
 
 

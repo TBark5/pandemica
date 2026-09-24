@@ -205,3 +205,22 @@ Each entry: the decision and the reason. Newest at the bottom.
   hit R0 = 2.5.
 - **Vaccination priority experiment**: 0-300k doses (1M people) allocated children-first,
   adults-first, 65+-first or pro rata, with spill-over to the next group when one is full.
+
+## Final self-review (independent reviewer pass)
+An independent read-only review found no errors in the model maths, and every README number
+matched `results/`. It did find these problems, all fixed:
+- **Overstated CI-coverage claim.** 19/20 (sqrt) vs 16/20 (raw) is too small a study to prove
+  anything, and the synthetic noise matches the bootstrap's assumptions. Wording is now
+  "small, suggestive check" everywhere; "calibrated" is gone.
+- **COVID growth-rate CIs were far too narrow**: the regression used a 7-day rolling mean,
+  so residuals were autocorrelated while the bootstrap assumes independence. Now fitted on
+  raw daily counts (zero-report days dropped); the intervals are much wider.
+- **Network R0 used the continuous-time transmissibility** tau/(tau+gamma), but the
+  simulator uses daily steps. It now uses the exact discrete-time T (tested against a
+  direct series sum), plus a note that the tree-like approximation overstates R0 on
+  clustered networks.
+- Interview answers made more precise: (1/R0)^I0 needs an exponential infectious period;
+  PRCC = 0 means no monotone effect, not no effect; stochastic-to-ODE convergence needs
+  I0/N fixed; vaccination sweeps are monotone for deaths, not peak size.
+- Removed stale "future work" items (MCMC and age structure are done), corrected the test
+  count to 92, and rephrased sentences that read as policy advice ("in this model...").

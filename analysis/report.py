@@ -7,6 +7,7 @@ the RESULTS:START and RESULTS:END markers in README.md.
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from analysis.common import load_json
@@ -18,6 +19,11 @@ H_START, H_END = "<!-- HEADLINES:START -->", "<!-- HEADLINES:END -->"
 
 def _csv(name: str) -> pd.DataFrame:
     return pd.read_csv(RESULTS_DIR / f"{name}.csv")
+
+
+def _frac(cov: dict) -> str:
+    """Coverage as 'k of n' (e.g. '19 of 20')."""
+    return f"{round(cov['R0_ci95_coverage'] * cov['n_datasets'])} of {cov['n_datasets']}"
 
 
 def _table(df: pd.DataFrame) -> str:
@@ -64,12 +70,14 @@ def section_m2() -> str:
         f"({f['n_bootstrap']} bootstrap refits; RMSE {f['rmse']:.1f} cases.)\n\n"
         "**Parameter recovery on SYNTHETIC data** (known truth):\n\n"
         f"{_table(rec_tbl)}\n\n"
-        f"**CI calibration:** over {cov['n_datasets']} synthetic datasets, the 95% CI for R0 "
-        f"contained the true value {cov['R0_ci95_coverage']:.0%} of the time; mean estimate "
-        f"{cov['mean_R0_estimate']:.3f} vs true {cov['true_R0']:.3f}. The same check with least "
-        f"squares on raw counts gave {m2['ci_coverage_raw_counts']['R0_ci95_coverage']:.0%} "
-        f"coverage, which is why the square-root scale is used (a small study: "
-        f"{cov['n_datasets']} datasets, {cov['n_boot_each']} refits each).\n"
+        f"**CI coverage check (small, suggestive only):** over {cov['n_datasets']} synthetic "
+        f"datasets ({cov['n_boot_each']} refits each), the 95% CI for R0 contained the true value "
+        f"in {_frac(cov)} datasets with the square-root scale and in "
+        f"{_frac(m2['ci_coverage_raw_counts'])} with raw counts; mean estimate "
+        f"{cov['mean_R0_estimate']:.3f} vs true {cov['true_R0']:.3f}. With only "
+        f"{cov['n_datasets']} datasets these rates are uncertain, and the synthetic noise "
+        f"(independent Poisson) matches what the bootstrap assumes, so real data may be less "
+        f"well covered.\n"
     )
     try:
         g = _csv("m2_covid_growth_r0")
@@ -82,7 +90,9 @@ def section_m2() -> str:
                                     zip(g["R0"], g["R0_ci95_low"], g["R0_ci95_high"])],
         })
         out += (f"\n**COVID-19 early growth (JHU CSSE)**: method demonstration only; assumes a "
-                f"{a['latent_days']}-day latent and {a['infectious_days']}-day infectious period.\n\n"
+                f"{a['latent_days']}-day latent and {a['infectious_days']}-day infectious period, "
+                f"and ignores the growth of testing in early 2020. Fitted to raw daily counts "
+                f"(zero-report days dropped) over {a['window_days']} days.\n\n"
                 f"{_table(g_tbl)}\n")
     except FileNotFoundError:
         pass
@@ -153,8 +163,11 @@ def section_m4() -> str:
     ss = m4["superspreaders_barabasi_albert"]
     return (
         f"### M4 - Network epidemics ({m4['setup']['nodes']} nodes, mean degree "
-        f"{m4['setup']['mean_degree']}, {m4['setup']['runs']} runs each)\n"
-        f"{_table(tbl)}\n\nAttack rate with 10% of nodes vaccinated:\n\n{_table(v_tbl)}\n\n"
+        f"{m4['setup']['mean_degree']}, {m4['setup']['runs']} runs per network)\n"
+        f"{_table(tbl)}\n\n(Approx. R0 = transmissibility x mean excess degree; it assumes a "
+        f"tree-like network, so it overstates R0 for the clustered Watts-Strogatz network.)\n\n"
+        f"Attack rate with 10% of nodes vaccinated (mean of "
+        f"{m4['setup']['vaccination_runs']} runs):\n\n{_table(v_tbl)}\n\n"
         f"On the Barabasi-Albert network the top 1% of nodes by degree caused "
         f"{ss['top1pct_degree_share_of_infections']:.0%} of all infections (Spearman correlation of "
         f"secondary infections with degree {ss['spearman_degree_vs_secondary']:.2f}, with "
@@ -216,6 +229,8 @@ def headlines() -> str:
     m2, m3, m5, m7 = (load_json(n) for n in ("m2_summary", "m3_summary", "m5_summary",
                                                "m7_summary"))
     f, cov = m2["fit"], m2["ci_coverage"]
+    rec = _csv("m2_parameter_recovery").set_index("parameter")["relative_error_pct"]
+    max_err = np.ceil(rec[["beta", "gamma", "R0"]].abs().max() * 10) / 10  # round up: "within"
     v = _csv("m4_vaccination")
     ba = v[(v["network"] == "Barabasi-Albert") & (v["coverage"].round(2) == 0.10)]
     ba = ba.set_index("strategy")["attack_rate_mean"]
@@ -225,8 +240,9 @@ def headlines() -> str:
         f"- **Real-data fit:** 1978 boarding-school influenza outbreak, R0 = {f['R0']:.2f} "
         f"(95% bootstrap CI {f['R0_ci95'][0]:.2f} - {f['R0_ci95'][1]:.2f}), infectious period "
         f"{f['infectious_period_days']:.1f} days.",
-        f"- **Calibrated uncertainty:** on synthetic data with known truth, the 95% CI for R0 "
-        f"covered the true value in {cov['R0_ci95_coverage']:.0%} of {cov['n_datasets']} datasets.",
+        f"- **Parameter recovery:** on synthetic data with known truth, the fit recovers beta, "
+        f"gamma and R0 within {max_err:.1f}%, and the 95% CI for R0 contained the true value in "
+        f"{_frac(cov)} datasets (a small, suggestive check).",
         f"- **Stochastic vs theory:** simulated early-extinction probability "
         f"{m3['extinction_probability_simulated']:.2f} vs branching-process theory "
         f"{m3['extinction_probability_theory']:.2f}.",

@@ -95,25 +95,29 @@ def covid_growth() -> pd.DataFrame | None:
     sigma, gamma = 1 / COVID_LATENT_DAYS, 1 / COVID_INFECTIOUS_DAYS
     rows, series = [], {}
     for c in COUNTRIES:
-        inc = daily_new(confirmed[c])
-        start = inc[inc >= GROWTH_START_CASES].index[0]
-        window = inc.loc[start:].iloc[:GROWTH_WINDOW_DAYS]
-        g = fit_growth_rate(window.to_numpy(), sigma, gamma)
+        smoothed = daily_new(confirmed[c])            # used only to choose the window start
+        start = smoothed[smoothed >= GROWTH_START_CASES].index[0]
+        raw = daily_new(confirmed[c], smooth=1).loc[start:].iloc[:GROWTH_WINDOW_DAYS]
+        days = np.arange(len(raw))
+        keep = raw.to_numpy() > 0                     # drop zero-report days (log undefined)
+        window = pd.Series(raw.to_numpy()[keep], index=days[keep])
+        g = fit_growth_rate(window.to_numpy(), sigma, gamma, days=window.index.to_numpy())
         series[c] = (window, g)
         rows.append({"country": c, "window_start": start.date(), "days": g.n_days,
+                     "zero_report_days_dropped": int((~keep).sum()),
                      "growth_rate_per_day": g.r, "growth_rate_ci95_low": g.r_ci95[0],
                      "growth_rate_ci95_high": g.r_ci95[1], "doubling_time_days": g.doubling_time,
                      "R0": g.r0, "R0_ci95_low": g.r0_ci95[0], "R0_ci95_high": g.r0_ci95[1]})
     fig, ax = plt.subplots(figsize=(8.5, 5))
     for color, (c, (window, g)) in zip(CATEGORICAL, series.items()):
-        x = np.arange(len(window))
+        x = window.index.to_numpy(dtype=float)
         ax.scatter(x, window.to_numpy(), color=color, s=16)
         intercept = np.mean(np.log(window.to_numpy()) - g.r * x)
         ax.plot(x, np.exp(intercept + g.r * x), color=color,
                 label=f"{c}: r = {g.r:.2f}/day, R0 = {g.r0:.1f}")
     ax.set_yscale("log")
     ax.set_xlabel(f"Days since 7-day-average cases reached {GROWTH_START_CASES}/day")
-    ax.set_ylabel("Daily new confirmed cases (log scale)")
+    ax.set_ylabel("Daily new confirmed cases, raw (log scale)")
     ax.set_title("Early COVID-19 growth (JHU CSSE) and implied R0")
     ax.legend(fontsize=8.5)
     savefig(fig, "m2_covid_growth")

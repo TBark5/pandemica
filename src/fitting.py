@@ -177,11 +177,17 @@ def r0_from_growth_rate(r: float | np.ndarray, sigma: float, gamma: float) -> fl
 
 
 def fit_growth_rate(
-    incidence: np.ndarray, sigma: float, gamma: float, n_boot: int = 1000, seed: int = 0
+    incidence: np.ndarray, sigma: float, gamma: float, n_boot: int = 1000, seed: int = 0,
+    days: np.ndarray | None = None,
 ) -> GrowthFit:
-    """Log-linear regression of incidence on time, with residual-bootstrap CIs."""
+    """Log-linear regression of incidence on time, with residual-bootstrap CIs.
+
+    Pass raw (unsmoothed) daily counts: the residual bootstrap assumes independent
+    residuals, and a rolling mean would make them strongly autocorrelated (CIs too
+    narrow). ``days`` gives the day of each count when some days were dropped.
+    """
     y = np.log(np.asarray(incidence, dtype=float))
-    x = np.arange(len(y), dtype=float)
+    x = np.arange(len(y), dtype=float) if days is None else np.asarray(days, dtype=float)
     slope, intercept = np.polyfit(x, y, 1)
     resid = y - (slope * x + intercept)
     rng = np.random.default_rng(seed)

@@ -57,12 +57,21 @@ def degree_stats(G: nx.Graph) -> dict:
 def network_r0(G: nx.Graph, tau: float, gamma: float) -> float:
     """Approximate R0 on a network: T * (<k^2>/<k> - 1).
 
-    T = tau / (tau + gamma) is the probability an infection passes along one edge
-    before the infector recovers (continuous-time approximation). The factor is the
-    mean *excess* degree: a newly infected node was reached through one edge, so it
-    has on average <k^2>/<k> - 1 other neighbours to infect. Hubs raise <k^2>.
+    T is the transmissibility: the probability that an infection passes along one edge
+    before the infector recovers. For this daily-step simulator (transmit with
+    p = 1 - exp(-tau) each day, recover with q = 1 - exp(-gamma) each day, and still able
+    to transmit on the day of recovery), P(never transmits) = q(1-p) / (1 - (1-q)(1-p)),
+    so T = 1 - q(1-p) / (1 - (1-q)(1-p)). (In continuous time T = tau / (tau + gamma).)
+
+    The second factor is the mean *excess* degree: a newly infected node was reached
+    through one edge, so it has on average <k^2>/<k> - 1 other neighbours to infect.
+    Hubs raise <k^2>. The formula assumes a locally tree-like network, so it
+    overestimates R0 on clustered networks (Watts-Strogatz), where many neighbours
+    of a new case are already infected.
     """
-    return tau / (tau + gamma) * degree_stats(G)["mean_excess_degree"]
+    p, q = 1 - np.exp(-tau), 1 - np.exp(-gamma)
+    transmissibility = 1 - q * (1 - p) / (1 - (1 - q) * (1 - p))
+    return transmissibility * degree_stats(G)["mean_excess_degree"]
 
 
 @dataclass
@@ -78,7 +87,7 @@ class NetworkRun:
 
     @property
     def attack_rate(self) -> float:
-        """Fraction of the non-vaccinated population ever infected."""
+        """Fraction of ALL nodes ever infected (vaccinated nodes count as not infected)."""
         return float((self.infection_day >= 0).sum() / len(self.final_state))
 
 
