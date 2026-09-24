@@ -31,24 +31,29 @@ SCENARIOS = {
 
 
 def counterfactuals() -> pd.DataFrame:
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 4.6))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 4.8))
     rows = []
     for color, (name, ivs) in zip(CATEGORICAL, SCENARIOS.items()):
         df = run_scenario(ivs)
         ls = "--" if name == "No intervention" else "-"
         ax1.plot(df["t"], df["I"] / 1000, color=color, ls=ls, label=name)
         ax2.plot(df["t"], df["D"] / 1000, color=color, ls=ls, label=name)
+        ax3.plot(df["t"], df["Reff"], color=color, ls=ls, label=name)
         rows.append({"scenario": name, **outcomes(df)})
-    ax1.axvspan(60, 120, color="grey", alpha=0.12, label="lockdown window")
-    ax1.set_xlim(0, 400)
-    ax2.set_xlim(0, 400)
+    for ax in (ax1, ax3):
+        ax.axvspan(60, 120, color="grey", alpha=0.12, label="lockdown window")
+    ax3.axhline(1, color="black", lw=0.8)
+    for ax in (ax1, ax2, ax3):
+        ax.set_xlim(0, 400)
+        ax.set_xlabel("Day")
     ax1.set_ylabel("Infectious (thousands)")
     ax2.set_ylabel("Cumulative deaths (thousands)")
-    for ax in (ax1, ax2):
-        ax.set_xlabel("Day")
-    ax1.set_title("Counterfactual epidemic curves (SEIRD, R0 = 2.5, N = 1M)")
+    ax3.set_ylabel("R_eff(t)")
+    ax1.set_title("Infectious")
     ax2.set_title("Cumulative deaths")
+    ax3.set_title("Effective reproduction number")
     ax1.legend(fontsize=8.5)
+    fig.suptitle("Counterfactual scenarios (SEIRD, R0 = 2.5, N = 1M)", y=1.02)
     savefig(fig, "m5_counterfactuals")
     table = pd.DataFrame(rows)
     base = table.loc[table["scenario"] == "No intervention"].iloc[0]

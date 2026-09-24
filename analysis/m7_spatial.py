@@ -68,17 +68,20 @@ def fig_regional_curves(base, restricted) -> None:
 
 def fig_arrival(geo, base_table, restr_table) -> None:
     dist = geo.distances()[0]
-    fig, ax = plt.subplots(figsize=(7, 4.6))
-    ax.scatter(dist, base_table["arrival_day"], color=CATEGORICAL[0], s=50, label="baseline")
-    ax.scatter(dist, restr_table["arrival_day"], color=CATEGORICAL[1], marker="s", s=50,
-               label=f"travel cut {RESTRICTION:.0%}")
-    for k, name in enumerate(geo.names):
-        ax.annotate(name, (dist[k], restr_table["arrival_day"].iloc[k]), xytext=(4, 4),
-                    textcoords="offset points", fontsize=8)
-    ax.set_xlabel("Distance from the Capital (map units)")
-    ax.set_ylabel("Arrival day (prevalence > 1 in 10,000)")
+    order = np.argsort(dist)
+    y = np.arange(geo.n)
+    fig, ax = plt.subplots(figsize=(8, 4.8))
+    ax.barh(y - 0.2, base_table["arrival_day"].to_numpy()[order], height=0.4,
+            color=CATEGORICAL[0], label="baseline travel")
+    ax.barh(y + 0.2, restr_table["arrival_day"].to_numpy()[order], height=0.4,
+            color=CATEGORICAL[1], label=f"travel cut by {RESTRICTION:.0%}")
+    ax.set_yticks(y, [f"{geo.names[k]} ({dist[k]:.1f})" for k in order])
+    ax.invert_yaxis()
+    ax.set_xlabel("Arrival day (prevalence first above 1 in 10,000)")
+    ax.set_ylabel("Region (distance from Capital)")
     ax.set_title("Travel restrictions delay arrival, they do not prevent it")
-    ax.legend()
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="upper right")
     savefig(fig, "m7_arrival_times")
 
 

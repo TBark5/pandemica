@@ -62,7 +62,7 @@ def main() -> dict:
     for (i, j), v in np.ndenumerate(matrix.to_numpy()):
         ax.text(j, i, f"{v:+.2f}", ha="center", va="center", fontsize=9,
                 color="white" if abs(v) > 0.6 else "black")
-    ax.set_xticks(range(matrix.shape[1]), matrix.columns)
+    ax.set_xticks(range(matrix.shape[1]), [c.replace(" ", "\n") for c in matrix.columns])
     ax.set_yticks(range(matrix.shape[0]), [LABELS[p] for p in matrix.index])
     ax.grid(False)
     fig.colorbar(im, ax=ax, label="PRCC")

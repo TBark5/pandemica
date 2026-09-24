@@ -72,14 +72,16 @@ def fig_phase_portrait() -> None:
     """S-I phase plane for several R0, with the S = N/R0 peak line."""
     fig, ax = plt.subplots(figsize=(6.5, 5))
     for color, r0 in zip(CATEGORICAL, (1.5, 2.0, 3.0, 5.0)):
-        df = simulate("SIR", ModelParams(beta=r0 * 0.1, gamma=0.1), N=N, I0=I0, t_max=800)
+        df = simulate("SIR", ModelParams(beta=r0 * 0.1, gamma=0.1), N=N, I0=I0,
+                      t_eval=np.arange(0, 800, 0.1))
         ax.plot(df["S"] / N, df["I"] / N, color=color, label=f"R0 = {r0}")
         ax.axvline(1 / r0, color=color, ls=":", lw=1.2)
     ax.set_xlabel("Susceptible fraction S/N")
     ax.set_ylabel("Infectious fraction I/N")
     ax.set_title("SIR phase portrait (S vs I)")
-    ax.text(0.02, 0.97, "dotted lines: S/N = 1/R0,\nwhere prevalence peaks",
-            transform=ax.transAxes, va="top", fontsize=9)
+    ax.text(0.98, 0.70, "dotted lines: S/N = 1/R0,\nwhere prevalence peaks.\n"
+            "Trajectories run right to left.", transform=ax.transAxes, ha="right", va="top",
+            fontsize=9)
     ax.set_xlim(0, 1.02)
     ax.legend(loc="upper right")
     savefig(fig, "m1_phase_portrait")

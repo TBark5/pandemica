@@ -144,7 +144,7 @@ def make_synthetic_outbreak(
     df = simulate("SIR", ModelParams(beta=beta, gamma=gamma), N=N, I0=I0, t_eval=t)
     observed = rng.poisson(df["I"].to_numpy()).astype(float)
     return OutbreakData(
-        name="Synthetic SIR outbreak",
+        name="Simulated SIR outbreak",
         t=t,
         observed=observed,
         N=N,

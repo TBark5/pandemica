@@ -54,7 +54,7 @@ def fig_curves(curves: dict) -> None:
         lo, hi = np.percentile(I * 100, [5, 95], axis=0)
         ax.fill_between(days, lo, hi, color=NET_COLORS[kind], alpha=0.18)
         ax.plot(days, I.mean(axis=0) * 100, color=NET_COLORS[kind], label=kind)
-    ax.set_xlim(0, 120)
+    ax.set_xlim(0, 150)
     ax.set_xlabel("Day")
     ax.set_ylabel("Infectious, % of nodes")
     ax.set_title(f"Same mean degree ({MEAN_DEGREE}), different structure: mean and 90% band "
@@ -64,7 +64,7 @@ def fig_curves(curves: dict) -> None:
 
 
 def fig_degree_distribution(graphs: dict) -> None:
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.3))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.5))
     for kind, G in graphs.items():
         k = np.array([d for _, d in G.degree()])
         values, counts = np.unique(k, return_counts=True)
@@ -80,7 +80,8 @@ def fig_degree_distribution(graphs: dict) -> None:
     ax1.legend()
     ax2.set_xlabel("Degree k (log)")
     ax2.set_ylabel("P(degree >= k) (log)")
-    ax2.set_title("Tail of the degree distribution: hubs in scale-free networks")
+    ax2.set_title("Tail (CCDF): only Barabasi-Albert has hubs")
+    fig.tight_layout()
     savefig(fig, "m4_degree_distribution")
 
 
@@ -161,10 +162,11 @@ def fig_vaccination(table: pd.DataFrame) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.3), sharey=True)
     styles = {"random": ("o-", CATEGORICAL[0]), "degree": ("s-", CATEGORICAL[1]),
               "betweenness": ("^-", CATEGORICAL[2])}
+    offsets = {"random": -0.5, "degree": 0.0, "betweenness": 0.5}  # x-shift so bars don't overlap
     for ax, kind in zip(axes, NETWORK_TYPES):
         for strategy, g in table[table["network"] == kind].groupby("strategy"):
             marker, color = styles[strategy]
-            ax.errorbar(g["coverage"] * 100, g["attack_rate_mean"] * 100,
+            ax.errorbar(g["coverage"] * 100 + offsets[strategy], g["attack_rate_mean"] * 100,
                         yerr=g["attack_rate_sd"] * 100, fmt=marker, color=color,
                         capsize=3, label=f"{strategy}")
         ax.set_title(kind)

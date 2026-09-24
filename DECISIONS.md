@@ -146,3 +146,25 @@ Each entry: the decision and the reason. Newest at the bottom.
 - **Animation**: 91 frames (days 0-180, every 2 days). GIF at 65 dpi (~1.4 MB, so it
   can go in the README) and MP4 at 120 dpi through the ffmpeg binary bundled with
   `imageio-ffmpeg` (no system install needed). The static snapshot figure is 300 dpi.
+
+## Phase 7 - Visuals
+- **Every PNG at 300 dpi** via `src/style.savefig`; one caption per figure in
+  `figures/CAPTIONS.md`. Log colour scales where values span orders of magnitude.
+- **Fixes made in the review pass**: smoother phase portrait (0.1-day output), text moved
+  off curves, overlapping titles and tick labels, arrival-time chart changed from a
+  labelled scatter (labels collided) to grouped bars, R_eff panel added to the
+  counterfactual figure.
+- **`analysis/report.py` writes the README results tables and headline bullets** from
+  `results/`, so README numbers always match the saved runs (rule 4). `run_all.py` runs it
+  last.
+
+## Phase 8 - Dashboard
+- **Streamlit, one tab per module**, tab code split into `dashboard/` so no file exceeds
+  ~300 lines. Heavy computations (bootstrap, Gillespie, network runs, LHS) use
+  `st.cache_data` and smaller defaults than the saved runs; saved figures are shown next to
+  the live controls.
+- **`?tab=m1` ... `?tab=m7` deep links** show one module. Added so headless Chrome can
+  screenshot each tab for the README; also handy for sharing.
+- **Dashboard smoke tests use Streamlit's `AppTest`** (renders all tabs headless, changes a
+  slider). A real `streamlit run` launch was also checked (health endpoint + screenshots).
+- **`.streamlit/config.toml`** turns off usage statistics and sets a light theme.

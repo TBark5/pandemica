@@ -55,7 +55,7 @@ def extinction_table() -> pd.DataFrame:
     """Simulated vs branching-theory extinction probability over R0 and I0."""
     rows = []
     for r0 in (1.5, 2.5, 4.0):
-        for i0 in (1, 2, 3, 5):
+        for i0 in (1, 2, 3, 4, 5):
             ens = run_ensemble(400, 2000, i0, r0 * GAMMA, GAMMA, 600, seed=int(r0 * 100 + i0))
             rows.append({"R0": r0, "I0": i0, "n_reps": 400, "N": 2000,
                          "extinction_simulated": ens.extinction_probability(),
@@ -70,6 +70,7 @@ def fig_extinction(table: pd.DataFrame) -> None:
         ax.scatter(g["I0"], g["extinction_simulated"], color=color, s=40, zorder=3,
                    label=f"R0 = {r0}")
     ax.plot([], [], color="grey", ls="--", label="theory (1/R0)^I0")
+    ax.set_xticks(range(1, 6))
     ax.set_xlabel("Initial number infectious I0")
     ax.set_ylabel("Probability outbreak dies out")
     ax.set_title("Early extinction: Gillespie (dots) vs branching theory (lines)")
