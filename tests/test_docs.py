@@ -1,4 +1,4 @@
-"""Documentation consistency: README results must match the saved results (rule 4)."""
+"""Documentation consistency: README results must match the saved results."""
 
 from pathlib import Path
 
@@ -22,7 +22,7 @@ def test_readme_tables_match_saved_results():
 
 def test_docs_have_no_placeholders():
     """No TODO / TBD / placeholder text left in the documentation."""
-    docs = ["README.md", "METHODS.md", "INTERVIEW_PREP.md", "RESUME_BULLETS.md",
+    docs = ["README.md", "METHODS.md",
             "DECISIONS.md", "figures/CAPTIONS.md"]
     for name in docs:
         path = ROOT / name

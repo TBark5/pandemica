@@ -1,6 +1,6 @@
 # Design decisions
 
-Choices made while building PANDEMICA without being able to ask questions.
+Design choices made while building PANDEMICA, and the reasoning behind each.
 Each entry: the decision and the reason. Newest at the bottom.
 
 ## Phase 0 - Setup
@@ -34,7 +34,7 @@ Each entry: the decision and the reason. Newest at the bottom.
   counted as removed, so R0 becomes beta / (gamma + kappa).
 - **Cumulative infections `C` is tracked as an extra ODE state** so incidence comes from
   differences of C, not from numerical differentiation.
-- **The stochastic-vs-deterministic convergence test (rule 10) is added in Phase 4**,
+- **The stochastic-vs-deterministic convergence test is added in Phase 4**,
   because it needs the M3 Gillespie code.
 
 ## Phase 2 - Data layer
@@ -156,7 +156,7 @@ Each entry: the decision and the reason. Newest at the bottom.
   labelled scatter (labels collided) to grouped bars, R_eff panel added to the
   counterfactual figure.
 - **`analysis/report.py` writes the README results tables and headline bullets** from
-  `results/`, so README numbers always match the saved runs (rule 4). `run_all.py` runs it
+  `results/`, so README numbers always match the saved runs. `run_all.py` runs it
   last.
 
 ## Phase 8 - Dashboard

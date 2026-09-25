@@ -6,3 +6,6 @@ __pycache__/
 .streamlit/secrets.toml
 *.log
 .venv-*/
+
+# personal notes (resume, interview prep, reports) - kept local only
+private/

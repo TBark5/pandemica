@@ -62,9 +62,11 @@ One tab per module with live sliders. `?tab=m1` ... `?tab=m7` in the URL opens a
 ## Quick start
 
 Tested on Python 3.14 (Windows 11, CPU only, no GPU needed). The pinned versions in
-`requirements.txt` were only tested on 3.14. From the project folder:
+`requirements.txt` were only tested on 3.14.
 
 ```bash
+git clone https://github.com/TBark5/pandemica.git
+cd pandemica
 python -m venv .venv
 # Windows:  .venv\Scripts\activate      macOS/Linux:  source .venv/bin/activate
 pip install -r requirements.txt
@@ -322,5 +324,3 @@ DECISIONS.md    design decisions and why
 
 - [METHODS.md](METHODS.md): the maths.
 - [DECISIONS.md](DECISIONS.md): every judgment call.
-- [INTERVIEW_PREP.md](INTERVIEW_PREP.md): likely questions with answers.
-- [PROGRESS.md](PROGRESS.md): development log and handoff notes.

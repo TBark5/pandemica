@@ -25,7 +25,7 @@ def test_single_path_is_valid():
 
 
 def test_stochastic_mean_approaches_deterministic_as_n_grows():
-    """Rule-10 check: RMS gap between ensemble mean and ODE shrinks with N.
+    """Validation check: RMS gap between ensemble mean and ODE shrinks with N.
 
     Initial infected is a fixed 1% of N, the setting of Kurtz's law of large numbers.
     """
