@@ -1,5 +1,8 @@
 # PANDEMICA
 
+[![tests](https://github.com/TBark5/pandemica/actions/workflows/tests.yml/badge.svg)](https://github.com/TBark5/pandemica/actions/workflows/tests.yml)
+![Python 3.14](https://img.shields.io/badge/python-3.14-blue)
+
 **Computational epidemiology and outbreak modelling platform in Python.**
 
 PANDEMICA models how an infectious disease spreads using four approaches: deterministic
