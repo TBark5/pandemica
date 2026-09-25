@@ -2,6 +2,7 @@
 
 [![tests](https://github.com/TBark5/pandemica/actions/workflows/tests.yml/badge.svg)](https://github.com/TBark5/pandemica/actions/workflows/tests.yml)
 ![Python 3.14](https://img.shields.io/badge/python-3.14-blue)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://pandemica.streamlit.app)
 
 **Computational epidemiology and outbreak modelling platform in Python.**
 
@@ -47,6 +48,10 @@ vaccine-priority strategies.
 The equations for every model are written out in [METHODS.md](METHODS.md).
 
 ## Dashboard
+
+**Live app: [pandemica.streamlit.app](https://pandemica.streamlit.app)**
+
+To run it locally:
 
 ```bash
 streamlit run app.py
