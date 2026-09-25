@@ -9,3 +9,6 @@ __pycache__/
 
 # personal notes (resume, interview prep, reports) - kept local only
 private/
+
+# local Claude Code preview config
+.claude/

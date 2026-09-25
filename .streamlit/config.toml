@@ -1,6 +1,19 @@
 [browser]
 gatherUsageStats = false
 
+[client]
+toolbarMode = "minimal"
+
 [theme]
 base = "light"
 primaryColor = "#0072B2"
+backgroundColor = "#F6F8FB"
+secondaryBackgroundColor = "#EDF1F7"
+textColor = "#16202E"
+linkColor = "#0072B2"
+borderColor = "#E1E6EE"
+showWidgetBorder = true
+baseRadius = "0.7rem"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+headingFont = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
