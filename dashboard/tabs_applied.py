@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+from dashboard import ui
 from dashboard.common import load_result, show, show_figure
 from src.interventions import Intervention, outcomes, run_scenario
 from src.metapopulation import default_geography, gravity_flows, simulate_metapop
@@ -38,9 +39,9 @@ def _network_runs(kind, n, k, tau, gamma, strategy, coverage, runs):
 
 
 def m4_tab() -> None:
-    st.header("M4 - Epidemics on contact networks")
+    ui.module_header("m4", "contact networks")
     left, right = st.columns([1, 3])
-    with left:
+    with ui.controls(left, "m4"):
         kind = st.selectbox("Network", NETWORK_TYPES, index=2)
         n = st.select_slider("Nodes", [500, 1000, 2000], value=1000)
         k = st.slider("Mean degree", 4, 16, 8, 2)
@@ -73,10 +74,10 @@ def m4_tab() -> None:
 
 
 def m5_tab() -> None:
-    st.header("M5 - Intervention simulator (SEIRD, R0 = 2.5)")
+    ui.module_header("m5", "SEIRD, R0 = 2.5")
     left, right = st.columns([1, 3])
     ivs = []
-    with left:
+    with ui.controls(left, "m5"):
         if st.checkbox("Lockdown", True):
             ivs.append(Intervention("lockdown", st.slider("Lockdown start day", 0, 200, 60),
                                     st.slider("Contact reduction", 0.0, 0.9, 0.6, 0.05),
@@ -120,26 +121,29 @@ def _lhs(n: int, outcome: str) -> pd.DataFrame:
 
 
 def m6_tab() -> None:
-    st.header("M6 - Global sensitivity analysis (LHS + PRCC)")
-    show_figure("m6_tornado.png", "Saved run (800 Latin hypercube samples)")
-    saved = load_result("m6_summary")
-    if saved:
-        st.caption(f"Ranges sampled: {saved['ranges']}")
-    st.subheader("Re-run live with fewer samples")
-    c1, c2 = st.columns(2)
-    n = c1.select_slider("Samples", [50, 100, 200, 300], value=100)
-    outcome = c2.selectbox("Outcome", ["cumulative_deaths", "peak_infectious", "peak_day",
-                                       "attack_rate"])
-    if st.button("Run sensitivity analysis"):
-        table = _lhs(n, outcome)
-        st.dataframe(table.style.format({"prcc": "{:+.3f}", "p_value": "{:.2g}"}),
-                     hide_index=True)
+    ui.module_header("m6", "LHS + PRCC")
+    left, right = st.columns([1, 3])
+    with ui.controls(left, "m6", "Re-run live"):
+        n = st.select_slider("Samples", [50, 100, 200, 300], value=100)
+        outcome = st.selectbox("Outcome", ["cumulative_deaths", "peak_infectious", "peak_day",
+                                           "attack_rate"])
+        run = st.button("Run sensitivity analysis", type="primary", width="stretch")
+        st.caption("Fewer samples than the saved run, so it finishes in seconds.")
+    with right:
+        if run:
+            table = _lhs(n, outcome)
+            st.dataframe(table.style.format({"prcc": "{:+.3f}", "p_value": "{:.2g}"}),
+                         hide_index=True, width="stretch")
+        show_figure("m6_tornado.png", "Saved run (800 Latin hypercube samples)")
+        saved = load_result("m6_summary")
+        if saved:
+            st.caption(f"Ranges sampled: {saved['ranges']}")
 
 
 def m7_tab() -> None:
-    st.header("M7 - Spatial spread between regions")
+    ui.module_header("m7", "metapopulation")
     left, right = st.columns([1, 3])
-    with left:
+    with ui.controls(left, "m7"):
         travel = st.slider("Share of population travelling per day (%)", 0.01, 1.0, 0.2, 0.01) / 100
         cut = st.slider("Travel restriction (% of flows removed)", 0, 99, 0, 1) / 100
         r0 = st.slider("R0 within regions", 1.2, 4.0, 2.5, 0.1)

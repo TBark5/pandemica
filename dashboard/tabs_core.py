@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
+from dashboard import ui
 from dashboard.common import load_result, show
 from src.compartmental import ModelParams, final_size, simulate
 from src.data import get_fit_dataset, make_synthetic_outbreak
@@ -15,9 +16,9 @@ from src.style import COMPARTMENT_COLORS, OKABE_ITO
 
 
 def m1_tab() -> None:
-    st.header("M1 - Compartmental ODE models")
+    ui.module_header("m1", "ODE models")
     left, right = st.columns([1, 3])
-    with left:
+    with ui.controls(left, "m1"):
         model = st.selectbox("Model", ["SIR", "SEIR", "SEIRD"], index=2)
         r0 = st.slider("R0", 0.5, 6.0, 2.5, 0.1)
         inf_days = st.slider("Infectious period (days)", 2.0, 14.0, 7.0, 0.5)
@@ -65,9 +66,9 @@ def _fit(use_synthetic: bool, n_boot: int):
 
 
 def m2_tab() -> None:
-    st.header("M2 - Fitting SIR to an outbreak")
+    ui.module_header("m2", "SIR fit to outbreak data")
     left, right = st.columns([1, 3])
-    with left:
+    with ui.controls(left, "m2"):
         source = st.radio("Dataset", ["Boarding-school flu 1978 (real)",
                                       "SYNTHETIC (known parameters)"])
         n_boot = st.slider("Bootstrap refits", 20, 300, 100, 20,
@@ -107,9 +108,9 @@ def _ensemble(n_reps: int, N: int, I0: int, r0: float, gamma: float, t_max: int)
 
 
 def m3_tab() -> None:
-    st.header("M3 - Gillespie stochastic SIR")
+    ui.module_header("m3", "Gillespie SIR")
     left, right = st.columns([1, 3])
-    with left:
+    with ui.controls(left, "m3"):
         N = st.select_slider("Population N", [100, 300, 1000, 3000], value=1000)
         I0 = st.slider("Initial infected", 1, 10, 2)
         r0 = st.slider("R0 ", 0.5, 5.0, 2.5, 0.1)

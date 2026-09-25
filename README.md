@@ -54,6 +54,11 @@ streamlit run app.py
 
 One tab per module with live sliders. `?tab=m1` ... `?tab=m7` in the URL opens a single module.
 
+**Deploying on [Streamlit Community Cloud](https://share.streamlit.io):** create an app from this
+repository with branch `main` and main file `app.py`, and pick Python 3.14 (or 3.13) under
+*Advanced settings*. The saved `results/` and `figures/` are committed, so the app works without
+running `run_all.py` first.
+
 ![Tour of the dashboard tabs](docs/dashboard_demo.gif)
 
 | M1 - compartmental models | M5 - intervention simulator |
